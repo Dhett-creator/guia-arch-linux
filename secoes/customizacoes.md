@@ -1,0 +1,3 @@
+# Ajustes e customizações
+
+Em andamento...
