@@ -8,6 +8,9 @@ export default defineConfig({
   // Muda o idioma base do site para melhorar acessibilidade e SEO
   lang: 'pt-BR',
 
+  // Nome do repositório Git
+  base: '/guia-arch-linux/',
+
   // Ativa o recurso de data de atualização (baseado nos commits do Git)
   lastUpdated: true,
 
