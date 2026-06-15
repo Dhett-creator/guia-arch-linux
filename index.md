@@ -6,12 +6,12 @@ hero:
   text: "Arch Linux e Derivados"
   tagline: "Otimizações, scripts de automação e configurações avançadas para o seu sistema."
   image:
-    src: /archlinux-icon.svg # (Opcional: você pode colocar uma imagem do Arch na pasta public/logo.png depois)
+    src: /archlinux-icon.svg
     alt: Arch Linux Logo
   actions:
     - theme: brand
       text: Começar a ler
-      link: /secoes/introducao
+      link: /secoes/procedimentos
     - theme: alt
       text: Ver no GitHub
       link: https://github.com/seu-usuario

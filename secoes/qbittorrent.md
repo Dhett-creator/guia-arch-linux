@@ -464,7 +464,7 @@ O script pode ser testado imediatamente com:
 /usr/local/bin/qbit-clean.py
 ```
 
-## Criando uma dependência entre o qBittorrent e disco
+## Criando uma dependência entre o qBittorrent e o disco
 
 No meu caso, ao desligar o sistema, o `systemd` costuma tentar desmontar o disco que armazena os arquivos do qBittorrent antes de encerrar o próprio serviço. Isso resulta em um erro, pois o disco ainda está em uso, gerando uma mensagem informando a falha na desmontagem da partição correspondente.
 
