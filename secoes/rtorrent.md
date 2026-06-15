@@ -307,7 +307,7 @@ ui.color.even.set = "bold"
 #############################################################################
 ```
 ::: tip AVISO
-Essa configuração foi criada e ajustada para as versões mais recentes do rTorrent (&ge; 0.16.14). Ela oferece uma automação básica para a adição e remoção de arquivos no rTorrent, exigindo apenas que o usuário ajuste corretamente os diretórios de criação de pastas e de armazenamento dos arquivos baixados. Foram definidos três diretórios `watch` para o monitoramento de arquivos `.torrent`. Basta que o usuário adicione um ou mais arquivos `.torrent` em qualquer um desses diretórios para que o download seja iniciado automaticamente no diretório correspondente.
+Essa configuração foi criada e ajustada para as versões mais recentes do rTorrent (&ge; 0.16.14). Ela oferece uma automação básica para a adição e remoção de arquivos, exigindo apenas que o usuário ajuste corretamente os diretórios de criação de pastas e de armazenamento dos arquivos baixados. Foram definidos três diretórios `watch` para o monitoramento de arquivos `.torrent`. Basta que o usuário adicione um ou mais arquivos `.torrent` em qualquer um desses diretórios para que o download seja iniciado automaticamente no diretório correspondente.
 :::
 
 Para verificar rapidamente se a configuração está correta, inicie o rTorrent no terminal:
