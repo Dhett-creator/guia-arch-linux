@@ -11,10 +11,18 @@ export default defineConfig({
   // Nome do repositório Git
   base: '/guia-arch-linux/',
 
+  // Configuração do ícone na aba do navegador (Favicon)
+  head: [
+    ['link', { rel: 'icon', href: '/guia-arch-linux/icone-site.svg' }]
+  ],
+
   // Ativa o recurso de data de atualização (baseado nos commits do Git)
   lastUpdated: true,
 
   themeConfig: {
+    // Ícone exibido ao lado do título na barra de navegação
+    logo: '/icone-site.svg',
+
     // Menu superior (Navbar)
     nav: [
       { text: 'Início', link: '/' },
@@ -39,9 +47,7 @@ export default defineConfig({
     // Menu lateral (Sidebar)
     sidebar: [
       {
-        //text: 'Começando',
         items: [
-          //{ text: 'Introdução', link: '/secoes/introducao' },
           { text: 'Procedimentos Essenciais', link: '/secoes/procedimentos' },
           { text: 'Ajustes e customizações', link: '/secoes/customizacoes' },
           { text: 'Downgrade de pacotes', link: '/secoes/downgrade' },

@@ -1,0 +1,4 @@
+:root {
+  /* Adiciona as Nerd Fonts mais populares como prioridade para blocos de código */
+  --vp-font-family-mono: 'JetBrainsMono Nerd Font', 'FiraCode Nerd Font', 'MesloLGS NF', 'CaskaydiaCove Nerd Font', 'Hack Nerd Font', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
