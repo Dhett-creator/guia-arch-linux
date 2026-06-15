@@ -18,7 +18,7 @@ export default defineConfig({
     // Menu superior (Navbar)
     nav: [
       { text: 'Início', link: '/' },
-      { text: 'O Guia', link: '/secoes/introducao' }
+      { text: 'O Guia', link: '/secoes/procedimentos' }
     ],
 
     // Rodapé da página inicial
@@ -41,12 +41,14 @@ export default defineConfig({
       {
         //text: 'Começando',
         items: [
-          { text: 'Introdução', link: '/secoes/introducao' },
+          //{ text: 'Introdução', link: '/secoes/introducao' },
           { text: 'Procedimentos Essenciais', link: '/secoes/procedimentos' },
           { text: 'Ajustes e customizações', link: '/secoes/customizacoes' },
           { text: 'Downgrade de pacotes', link: '/secoes/downgrade' },
           { text: 'Formatação de dispositivos removíveis', link: '/secoes/formatacao' },
           { text: 'qBittorrent-nox', link: '/secoes/qbittorrent' },
+          { text: 'rTorrent', link: '/secoes/rtorrent' },
+          { text: 'RAID0', link: '/secoes/raid0' },
         ]
       }
     ],
