@@ -14,7 +14,7 @@ hero:
       link: /secoes/procedimentos
     - theme: alt
       text: Ver no GitHub
-      link: https://github.com/seu-usuario
+      link: https://github.com/Dhett-creator/guia-arch-linux
 
 features:
   - title: Configurações Essenciais
