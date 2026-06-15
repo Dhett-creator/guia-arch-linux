@@ -22,7 +22,7 @@ features:
   - title: Automação de Torrents
     details: Scripts completos em Python e Bash para monitoramento automático de pastas e integração limpa do qBittorrent e rTorrent com o systemd.
   - title: Customização de Terminal
-    details: Substitua o bash padrão pelo Fish shell, configure o prompt do Starship e eleve a produtividade usando emuladores acelerados via GPU.
+    details: Substitua o bash padrão pelo Fish shell, configure o prompt do Starship e eleve a produtividade usando emuladores de terminal acelerados via GPU.
 ---
 
 <style>
