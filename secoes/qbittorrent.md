@@ -217,7 +217,7 @@ sudo systemctl status qbit-scan.service
 A partir desse momento, todos os arquivos `.torrent` adicionados às pastas `Pasta1-.torrents`, `Pasta2-.torrents` e `Pasta3-.torrents` serão automaticamente importados pelo qBittorrent e terão seus downloads iniciados nos diretórios `Pasta1`, `Pasta2` e `Pasta3`, respectivamente.
 
 ::: warning AVISO
-Com relação ao script que acabamos de criar, observe que no inicio há a seguinte linha comentada: `SKIP_CHECK="-F skip_checking=true"`. Essa linha é responsável por instruir o qBittorrent a pular a verificação de hash, sendo especialmente útil em situações em que há inúmeros arquivos já baixados e armazenados em disco e se deseja apenas retomar a atividade de seed. Assim, caso deseje utilizar essa funcionalidade, basta descomentar essa linha. 
+Com relação ao script que acabamos de criar, observe que no início há a seguinte linha comentada: `SKIP_CHECK="-F skip_checking=true"`. Essa linha é responsável por instruir o qBittorrent a pular a verificação de hash, sendo especialmente útil em situações em que há inúmeros arquivos já baixados e armazenados em disco e se deseja apenas retomar a atividade de seed. Assim, caso deseje utilizar essa funcionalidade, basta descomentar essa linha. 
 
 Após o uso, entretanto, é fundamental comentá-la novamente, pois, caso permaneça descomentada, novos arquivos poderão passar a ser exibidos com o status `Arquivos ausentes`. Portanto, após a utilização dessa funcionalidade, comente novamente a linha e reinicie o serviço do script: `sudo systemctl restart qbit-scan.service`
 :::
@@ -466,7 +466,7 @@ O script pode ser testado imediatamente com:
 
 ## Criando uma dependência entre o qBittorrent e o disco
 
-No meu caso, ao desligar o sistema, o `systemd` costuma tentar desmontar o disco que armazena os arquivos do qBittorrent antes de encerrar o próprio serviço. Isso resulta em um erro, pois o disco ainda está em uso, gerando uma mensagem informando a falha na desmontagem da partição correspondente.
+No meu caso, ao desligar o sistema, o `systemd` costuma tentar desmontar o disco que armazena os arquivos do qBittorrent antes de encerrar o próprio serviço. Isso resulta em um erro, pois o disco continua em uso, gerando uma mensagem informando a falha na desmontagem da partição correspondente.
 
 Embora esse comportamento não cause problemas práticos no uso cotidiano, considerei mais adequado ajustar a ordem de finalização do qBittorrent, de modo a evitar esse aviso e garantir um desligamento mais limpo do sistema.
 
@@ -493,7 +493,7 @@ TimeoutStopSec=60
 ```
 
 ::: tip AVISO
-Note que estou usando o disco `md0` como exemplo, mas poderia ser qualquer outro (`sda`, `sdb`, `sdc`, etc.).
+Note que estou utilizando o disco `md0` como exemplo, mas poderia ser qualquer outro (`sda`, `sdb`, `sdc`, etc.).
 :::
 
 Para finalizar, recarregue o `daemon`:
