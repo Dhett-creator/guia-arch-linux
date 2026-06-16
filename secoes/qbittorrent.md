@@ -16,7 +16,7 @@ Após a instalação é importante que o qBittorrent-nox seja iniciado pela prim
 qbittorrent-nox
 ```
 
-Realizadas as configurações, feche o aplicativo utilizando apenas o atalho `Ctrl + c` e siga os passos abaixo para criar um serviço que permita ao qBittorrent-nox iniciar junto com o sistema.
+Realizadas as configurações, feche o aplicativo utilizando apenas o atalho `Ctrl + c` e siga os passos abaixo para criar um serviço que permita ao qBittorrent-nox iniciar com o sistema.
 
 Primeiro, crie o arquivo de serviço:
 
@@ -53,7 +53,7 @@ TimeoutStopSec=60
 WantedBy=multi-user.target
 ```
 
-Por ultimo é necessário ativar o serviço:
+Por último é necessário ativar o serviço:
 
 ```bash
 sudo systemctl daemon-reload
@@ -339,7 +339,7 @@ sudo nano /usr/local/bin/qbit-clean.py
 
 Cole o conteúdo:
 
-```bash
+```python
 #!/usr/bin/env python3
 import os
 import requests
