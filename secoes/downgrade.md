@@ -5,13 +5,13 @@ No Arch Linux, manter um pacote em uma versão antiga exige dois passos: instala
 A maneira mais segura e fácil de fazer isso é usando um utilitário chamado `downgrade`, disponível no AUR:
 
 ```bash
-yay -S downgrade
+$ yay -S downgrade
 ```
 
 Como exemplo irei realizar o downgrade do `rtorrent`, que também depende do pacote `libtorrent`. Execute o comando abaixo com privilégios de superusuário, chamando os dois pacotes ao mesmo tempo: 
 
 ```bash
-sudo downgrade rtorrent libtorrent
+$ sudo downgrade rtorrent libtorrent
 ```
 
 O terminal vai listar todas as versões antigas disponíveis no cache local da sua máquina e no Arch Linux Archive (ALA). Digite o número correspondente à versão que você deseja para cada um. Após instalar a versão antiga, o próprio comando downgrade perguntará se deseja manter os pacotes congelados nessa versão. Se assim desejar, confirme com `y`.

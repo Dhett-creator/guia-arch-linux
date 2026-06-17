@@ -5,18 +5,18 @@
 Instale os seguintes pacotes:
 
 ```bash
-sudo pacman -S rtorrent tmux trash-cli
+$ sudo pacman -S rtorrent tmux trash-cli
 ```
 
 Em seguida, crie o arquivo de configuração do rTorrent, denominado `.rtorrent.rc`, no diretório do usuário:
 
 ```bash
-nano ~/.rtorrent.rc
+$ nano ~/.rtorrent.rc
 ```
 
 Dentro desse arquivo, cole o seguinte conteúdo:
 
-```bash
+```bash:line-numbers {11,34-36,118,124,171-173,177-179,183-185}
 #############################################################################
 # Uma configuração mínima do rTorrent que fornece os recursos básicos
 # que você deseja ter além dos padrões integrados.
@@ -306,6 +306,10 @@ ui.color.even.set = "bold"
 ### END OF rtorrent.rc ###
 #############################################################################
 ```
+:::info
+As linhas destacadas requerem adaptação por parte do usuário.
+:::
+
 ::: tip AVISO
 Essa configuração foi criada e ajustada para as versões mais recentes do rTorrent (&ge; 0.16.14). Ela oferece uma automação básica para a adição e remoção de arquivos, exigindo apenas que o usuário ajuste corretamente os diretórios de criação de pastas e de armazenamento dos arquivos baixados. Foram definidos três diretórios `watch` para o monitoramento de arquivos `.torrent`. Basta que o usuário adicione um ou mais arquivos `.torrent` em qualquer um desses diretórios para que o download seja iniciado automaticamente no diretório correspondente.
 :::
@@ -313,18 +317,18 @@ Essa configuração foi criada e ajustada para as versões mais recentes do rTor
 Para verificar rapidamente se a configuração está correta, inicie o rTorrent no terminal:
 
 ```bash
-rtorrent
+$ rtorrent
 ```
 
 Se o programa iniciar normalmente, já é possível prosseguir com a criação de um serviço para inicialização automática via `systemd`:
 
 ```bash
-sudo nano /etc/systemd/system/rtorrent.service
+$ sudo nano /etc/systemd/system/rtorrent.service
 ```
 
 Dentro do arquivo, cole o seguinte conteúdo:
 
-```bash
+```bash:line-numbers {7,8}
 [Unit]
 Description=rtorrent (in tmux)
 After=network.target
@@ -345,19 +349,19 @@ WantedBy=multi-user.target
 Para acessar o rTorrent através de uma seção `tmux`, utiliza-se: `/usr/bin/tmux a -t rtorrent`. Porém, para facilitar o acesso, iremos criar um alias para esse comando:
 
 ```bash
-nano ~/.bashrc
+$ nano ~/.bashrc
 ```
 
 Adicione essa linha ao final do arquivo:
 
-```bash
+```bash:line-numbers
 alias rt='/usr/bin/tmux a -t rtorrent'
 ```
 
 Atualize o terminal atual:
 
 ```bash
-source ~/.bashrc
+$ source ~/.bashrc
 ```
 
 Agora, podemos usar o atalho `rt` para acessar a interface do rTorrent. Porém, não teste esse comando ainda, não ativamos o serviço do rTorrent para que haja uma seção ativa do `tmux` para ser acessada.
@@ -365,14 +369,14 @@ Agora, podemos usar o atalho `rt` para acessar a interface do rTorrent. Porém, 
 Para ativar o serviço do rTorrent:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now rtorrent
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable --now rtorrent
 ```
 
 Os status do serviço pode ser consultado utilizando:
 
 ```bash
-systemctl status rtorrent
+$ systemctl status rtorrent
 ```
 
 Caso esteja funcionando corretamente, teste o atalho de acesso a interface digitando `rt` no terminal.
@@ -384,12 +388,12 @@ Assim como o qBittorrent-nox, o rTorrent também não possui um sistema de notif
 Primeiro, vamos criar os dois scripts responsáveis por notificar quando um torrent é adicionado e quando um download é finalizado:
 
 ```bash
-sudo nano /usr/local/bin/rtorrent-added.sh
+$ sudo nano /usr/local/bin/rtorrent-added.sh
 ```
 
 Adicione o seguinte conteúdo ao arquivo:
 
-```bash
+```bash:line-numbers
 #!/bin/bash
 
 TORRENT_NAME="$1"
@@ -415,12 +419,12 @@ export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
 Agora, vamos criar o script para notificar quando um download for finalizado:
 
 ```bash
-sudo nano /usr/local/bin/rtorrent-downloaded.sh
+$ sudo nano /usr/local/bin/rtorrent-downloaded.sh
 ```
 
 Dentro do arquivo, adicione:
 
-```bash
+```bash:line-numbers
 #!/bin/bash
 
 TORRENT_NAME="$1"
@@ -446,7 +450,7 @@ export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
 Agora, conceda permissão de execução para os scripts:
 
 ```bash
-sudo chmod +x /usr/local/bin/rtorrent-*.sh
+$ sudo chmod +x /usr/local/bin/rtorrent-*.sh
 ```
 
 Importante, para que esses scripts sejam executados pelo rTorrent, as seguintes linhas precisam fazer parte do seu arquivo de configurações `.rtorrent.rc`:
@@ -459,7 +463,7 @@ method.set_key = event.download.inserted_new,notify_added,"execute=/usr/local/bi
 Caso seu arquivo ainda não às possua, basta adicioná-las ao final do arquivo e reiniciar o serviço do rTorrent:
 
 ```bash
-sudo systemctl restart rtorrent
+$ sudo systemctl restart rtorrent
 ```
 
 ## Flood + rTorrent
@@ -467,12 +471,12 @@ sudo systemctl restart rtorrent
 Primeiro, precisamos instalar o pacote `flood-bin` disponível no AUR:
 
 ```bash
-yay -S flood-bin
+$ yay -S flood-bin
 ```
 
 Precisamos configurar o rTorrent para criar o arquivo de comunicação (Socket) e dar as permissões corretas para o Flood acessá-lo. Para isso, garanta que as seguintes linhas façam parte do seu arquivo de configurações `.rtorrent.rc`: 
 
-```bash
+```bash:line-numbers
 # Configuração de comunicação via Socket Unix
 network.scgi.open_local = ~/.rtorrent/rpc.socket
 
@@ -493,12 +497,12 @@ Caso tenha utilizado a configuração fornecida anteriormente, esses parâmetros
 Uma vez que se tenha esses parâmetros presentes no arquivo de configurações do rTorrent, precisamos criar um serviço para que o Flood inicie junto com o sistema:
 
 ```bash
-sudo nano /etc/systemd/system/flood.service
+$ sudo nano /etc/systemd/system/flood.service
 ```
 
 Dentro do arquivo, adicione:
 
-```bash
+```bash:line-numbers {7-9}
 [Unit]
 Description=Flood rTorrent Web Interface
 # Garante que o Flood só inicie após a rede e o rTorrent estarem prontos
@@ -518,14 +522,14 @@ WantedBy=multi-user.target
 Para habilitar e iniciar o serviço:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now flood
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable --now flood
 ```
 
 O status do serviço pode ser verificado com:
 
 ```bash
-systemctl status flood
+$ systemctl status flood
 ```
 
 Para configuração inicial acesse:
@@ -545,12 +549,12 @@ Para contornar esse problema, podemos criar um script que realize verificações
 Primeiro, crie o arquivo do script:
 
 ```bash
-sudo nano /usr/local/bin/rtorrent-clean.py
+$ sudo nano /usr/local/bin/rtorrent-clean.py
 ```
 
 Adicione o seguinte conteúdo dentro do arquivo:
 
-```python
+```python:line-numbers {9-11,14}
 #!/usr/bin/env python3
 import os
 import xmlrpc.client
@@ -656,12 +660,12 @@ if __name__ == "__main__":
 Agora, crie o arquivo de serviço para o script:
 
 ```bash
-sudo nano /etc/systemd/system/rtorrent-clean.service
+$ sudo nano /etc/systemd/system/rtorrent-clean.service
 ```
 
 Dentro do arquivo, adicione:
 
-```bash
+```bash:line-numbers {7,8}
 [Unit]
 Description=Limpeza de .torrent removidos do rTorrent (Python)
 After=network.target
@@ -679,12 +683,12 @@ WantedBy=multi-user.target
 Em seguida, vamos criar um arquivo de `timer` para que o script seja executado periodicamente:
 
 ```bash
-Em seguida, crie um arquivo de timer para que o script seja executado periodicamente:
+$ sudo nano /etc/systemd/system/rtorrent-clean.timer
 ```
 
 Dentro do arquivo, adicione:
 
-```bash
+```bash:line-numbers
 [Unit]
 Description=Executa limpeza periódica de .torrent removidos do rTorrent
 
@@ -700,21 +704,21 @@ WantedBy=timers.target
 Conceda permissão de execução para o script:
 
 ```bash
-sudo chmod +x /usr/local/bin/rtorrent-clean.py
+$ sudo chmod +x /usr/local/bin/rtorrent-clean.py
 ```
 
 Por ultimo, recarregue e inicie o serviço:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now rtorrent-clean.timer
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable --now rtorrent-clean.timer
 ```
 
 ## Tornar a interface Flood visível na rede
 
 Para permitir que o Flood seja acessado por outros computadores na rede de forma segura, é necessário ajustar a linha `ExecStart` no seu arquivo `/etc/systemd/system/flood.service`, adicionando `--host 0.0.0.0` ao final:
 
-```bash
+```bash:line-numbers {2-4}
 [Service]
 User=user
 Group=user
@@ -727,24 +731,25 @@ Restart=always
 Após salvar o arquivo, você deve recarregar as configurações do `systemd` e reiniciar o serviço:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl restart flood
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart flood
 ```
 
 O `0.0.0.0` abre o Flood para qualquer pessoa na sua rede. Se você quiser ser mais restritivo e garantir que apenas você acesse de outros dispositivos, o ideal é usar o Firewall do Arch (UFW) para limitar o acesso aos IPs da sua casa:
 
 ```bash
-# Permite acesso à porta 3000 apenas para IPs que começam com 192.168.1.x
-sudo ufw allow from 192.168.1.0/24 to any port 3000
+$ sudo ufw allow from 192.168.1.0/24 to any port 3000
 ```
-
+::: tip AVISO
+Esse comando permite acesso à porta 3000 apenas para IPs que começam com `192.168.1.x`.
+:::
 Após isso, para acessar a interface do Flood a partir de outro computador, basta utilizar o endereço `http://IP_DA_MAQUINA:3000/overview`, colocando apenas o IP da maquina onde o rTorrent e o Flood estão rodando.
 
 Caso deseje reverter essas mudanças, edite o arquivo de serviço do Flood novamente e apague `--host 0.0.0.0`. Depois, reinicie o serviço:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl restart flood
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart flood
 ```
 
 Para deletar a permissão adicionada ao `ufw`, use `sudo ufw status numbered` para listar todas as regras ativas e depois `sudo ufw delete número_da_regra` para excluir a regra.
@@ -760,12 +765,12 @@ A solução adotada foi criar uma dependência explícita entre o serviço do rT
 Para isso, vamos criar a seguinte pasta e arquivo de configuração, respectivamente:
 
 ```bash
-sudo mkdir -p /etc/systemd/system/rtorrent.service.d/
-sudo nano /etc/systemd/system/rtorrent.service.d/dependencia.conf
+$ sudo mkdir -p /etc/systemd/system/rtorrent.service.d/
+$ sudo nano /etc/systemd/system/rtorrent.service.d/dependencia.conf
 ```
 Dentro do arquivo, cole exatamente este conteúdo:
 
-```bash
+```bash:line-numbers {3,4}
 [Unit]
 # Isso força a ordem no desligamento
 After=mnt-md0.mount
@@ -784,5 +789,5 @@ Mais uma vez estou utilizando o disco `md0` como exemplo. Portanto, adapte de ac
 Após salvar e fechar o arquivo, recarregue o `daemon` e teste:
 
 ```bash
-sudo systemctl daemon-reload
+$ sudo systemctl daemon-reload
 ```
