@@ -7,13 +7,13 @@ Por motivos pessoais, costumo utilizar a versão do qBittorrent sem interface gr
 Para instalá-la:
 
 ```bash
-sudo pacman -S qbittorrent-nox
+$ sudo pacman -S qbittorrent-nox
 ```
 
 Após a instalação é importante que o qBittorrent-nox seja iniciado pela primeira vez via terminal para ser definido um novo usuário e uma nova senha nas configurações do aplicativo. Esse comando inicia o qBittorrent-nox pelo terminal:
 
 ```bash
-qbittorrent-nox
+$ qbittorrent-nox
 ```
 
 Realizadas as configurações, feche o aplicativo utilizando apenas o atalho `Ctrl + c` e siga os passos abaixo para criar um serviço que permita ao qBittorrent-nox iniciar com o sistema.
@@ -21,12 +21,12 @@ Realizadas as configurações, feche o aplicativo utilizando apenas o atalho `Ct
 Primeiro, crie o arquivo de serviço:
 
 ```bash
-sudo nano /etc/systemd/system/qbittorrent-nox.service
+$ sudo nano /etc/systemd/system/qbittorrent-nox.service
 ```
 
 Em seguida, copie e cole o conteúdo abaixo dentro de `qbittorrent-nox.service`:
 
-```bash
+```bash:line-numbers {6,11-13}
 [Unit]
 Description=qBittorrent Command Line Client
 Wants=network-online.target
@@ -52,12 +52,15 @@ TimeoutStopSec=60
 [Install]
 WantedBy=multi-user.target
 ```
+:::info
+As linhas destacadas requerem adaptação por parte do usuário.
+:::
 
 Por último é necessário ativar o serviço:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now qbittorrent-nox.service
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable --now qbittorrent-nox.service
 ```
 
 ## Automação de downloads
@@ -69,7 +72,7 @@ Neste exemplo, serão monitoradas três pastas distintas. Para cada uma delas, s
 Primeiramente, é necessário instalar o pacote `inotify-tools`, responsável por permitir o monitoramento de múltiplas pastas no sistema:
 
 ```bash
-sudo pacman -S inotify-tools curl
+$ sudo pacman -S inotify-tools curl
 ```
 
 Vamos supor que queremos realizar o monitoramento das pastas:
@@ -85,12 +88,12 @@ Essas pastas devem ser criadas antes de prosseguir. O próximo passo consiste em
 Criação do Script:
 
 ```bash
-sudo nano /usr/local/bin/qbit-scan.sh
+$ sudo nano /usr/local/bin/qbit-scan.sh
 ```
 
 Conteúdo do arquivo:
 
-```bash
+```bash:line-numbers {7-9,17,20,21}
 #!/bin/bash
 
 # --- CONFIGURAÇÃO DE DIRETÓRIOS E CATEGORIAS ---
@@ -169,22 +172,21 @@ while read path action file; do
   fi
 done
 ```
-
 Conceda permissão de execução para o script:
 
 ```bash
-sudo chmod +x /usr/local/bin/qbit-scan.sh
+$ sudo chmod +x /usr/local/bin/qbit-scan.sh
 ```
 
 Agora, crie o serviço:
 
 ```bash
-sudo nano /etc/systemd/system/qbit-scan.service
+$ sudo nano /etc/systemd/system/qbit-scan.service
 ```
 
 Cole o seguinte conteúdo:
 
-```bash
+```bash:line-numbers {8,9}
 [Unit]
 Description=Monitoramento de torrents
 After=qbittorrent-nox.service
@@ -204,14 +206,14 @@ WantedBy=multi-user.target
 Ative o serviço:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now qbit-scan.service
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable --now qbit-scan.service
 ```
 
 Para checar o status do serviço:
 
 ```bash
-sudo systemctl status qbit-scan.service
+$ sudo systemctl status qbit-scan.service
 ```
 
 A partir desse momento, todos os arquivos `.torrent` adicionados às pastas `Pasta1-.torrents`, `Pasta2-.torrents` e `Pasta3-.torrents` serão automaticamente importados pelo qBittorrent e terão seus downloads iniciados nos diretórios `Pasta1`, `Pasta2` e `Pasta3`, respectivamente.
@@ -231,12 +233,12 @@ Embora o qBittorrent-nox não disponibilize uma opção nativa de notificações
 Primeiramente, será criado o script responsável pela notificação de "**Download finalizado**":
 
 ```bash
-sudo nano /usr/local/bin/qbit-downloaded.sh
+$ sudo nano /usr/local/bin/qbit-downloaded.sh
 ```
 
 Dentro do arquivo, adicione o seguinte conteúdo:
 
-```bash
+```bash:line-numbers
 #!/bin/bash
 
 TORRENT_NAME="$1"
@@ -262,12 +264,12 @@ export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
 Em seguida, crie o script responsável pela notificação de "**Torrent adicionado**":
 
 ```bash
-sudo nano /usr/local/bin/qbit-added.sh
+$ sudo nano /usr/local/bin/qbit-added.sh
 ```
 
 Dentro do arquivo, adicione:
 
-```bash
+```bash:line-numbers
 #!/bin/bash
 
 TORRENT_NAME="$1"
@@ -293,14 +295,14 @@ export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
 Após a criação dos arquivos, conceda permissão de execução aos scripts utilizando o comando:
 
 ```bash
-sudo chmod +x /usr/local/bin/qbit-*.sh
+$ sudo chmod +x /usr/local/bin/qbit-*.sh
 ```
 
 Os scripts podem ser testados manualmente com os comandos:
 
 ```bash
-/usr/local/bin/qbit-added.sh "Teste 1"
-/usr/local/bin/qbit-downloaded.sh "Teste 2"
+$ /usr/local/bin/qbit-added.sh "Teste 1"
+$ /usr/local/bin/qbit-downloaded.sh "Teste 2"
 ```
 
 Se as notificações forem exibidas corretamente, abra a interface web do qBittorrent e navegue até `Opções > Downloads`. Nessa janela, role até o final, onde se encontra a seção `Executar programa externo`, e marque as opções `Executar ao adicionar o torrent` e `Executar ao concluir o torrent`.
@@ -328,18 +330,18 @@ A proposta consiste em realizar uma varredura periódica nos torrents atualmente
 Inicialmente, instale os pacotes necessários para o funcionamento do script:
 
 ```bash
-sudo pacman -S transmission-cli trash-cli python-requests
+$ sudo pacman -S transmission-cli trash-cli python-requests
 ```
 
 Desta vez, por conveniência, iremos criar o script em Python:
 
 ```bash
-sudo nano /usr/local/bin/qbit-clean.py
+$ sudo nano /usr/local/bin/qbit-clean.py
 ```
 
 Cole o conteúdo:
 
-```python
+```python:line-numbers {8-10,16,17}
 #!/usr/bin/env python3
 import os
 import requests
@@ -402,18 +404,18 @@ if __name__ == "__main__":
 Conceda permissão de execução:
 
 ```bash
-sudo chmod +x /usr/local/bin/qbit-clean.py
+$ sudo chmod +x /usr/local/bin/qbit-clean.py
 ```
 
 Crie o arquivo de serviço:
 
 ```bash
-sudo nano /etc/systemd/system/qbit-clean.service
+$ sudo nano /etc/systemd/system/qbit-clean.service
 ```
 
 Cole o seguinte conteúdo:
 
-```bash
+```bash:line-numbers {7,8}
 [Unit]
 Description=Limpeza de .torrent removidos do qBittorrent (Python)
 After=qbittorrent-nox.service
@@ -431,12 +433,12 @@ WantedBy=multi-user.target
 Para execução periódica, crie o `timer systemd`:
 
 ```bash
-sudo nano /etc/systemd/system/qbit-clean.timer
+$ sudo nano /etc/systemd/system/qbit-clean.timer
 ```
 
 Dentro desse arquivo, cole:
 
-```bash
+```bash:line-numbers
 [Unit]
 Description=Executa limpeza periódica de .torrent removidos (Python)
 
@@ -454,14 +456,14 @@ Os parâmetros `OnBootSec` e `OnUnitActiveSec` estabelecem, respectivamente, o t
 Agora que os arquivos já estão prontos, podemos ativar o `qbit-clean.timer`:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now qbit-clean.timer
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable --now qbit-clean.timer
 ```
 
 O script pode ser testado imediatamente com:
 
 ```bash
-/usr/local/bin/qbit-clean.py
+$ /usr/local/bin/qbit-clean.py
 ```
 
 ## Criando uma dependência entre o qBittorrent e o disco
@@ -475,13 +477,13 @@ A solução adotada foi criar uma dependência explícita entre o serviço do qB
 Para isso, vamos criar a seguinte pasta e arquivo de configuração, respectivamente:
 
 ```bash
-sudo mkdir -p /etc/systemd/system/qbittorrent.service.d/
-sudo nano /etc/systemd/system/qbittorrent.service.d/override.conf
+$ sudo mkdir -p /etc/systemd/system/qbittorrent.service.d/
+$ sudo nano /etc/systemd/system/qbittorrent.service.d/override.conf
 ```
 
 Dentro do arquivo, cole o seguinte conteúdo:
 
-```bash
+```bash:line-numbers
 [Unit]
 After=mnt-md0.mount
 Requires=mnt-md0.mount
@@ -499,6 +501,6 @@ Note que estou utilizando o disco `md0` como exemplo, mas poderia ser qualquer o
 Para finalizar, recarregue o `daemon`:
 
 ```bash
-sudo systemctl daemon-reload
+$ sudo systemctl daemon-reload
 ```
 

@@ -1,19 +1,19 @@
 # Ajustes e customizações
 
-Nesta seção serão apresentados ajustes que considero essenciais, como a ocultação de ícones indesejáveis na grade de aplicativos do Gnome, bem como ajustes visuais obtidos através de temas para aplicativos que ainda não foram portados para GTK4.
+A seguir, serão apresentados ajustes que considero essenciais, como a ocultação de ícones indesejáveis na grade de aplicativos do Gnome, bem como ajustes visuais obtidos através de temas para aplicativos que ainda não foram portados para GTK4.
 
 ## Ocultação de ícones da grade de aplicativos do Gnome
 
 Diferente de outras distribuições, o Arch Linux não costuma ocultar por padrão alguns ícones desnecessários na grade de aplicativos do Gnome. A ocultação desses ícones pode ser feita adicionando um único parâmetro ao arquivo `.desktop` correspondente ao aplicativo. Esses arquivos ficam localizados em:
 
 ```bash
-cd /usr/share/applications/
+$ cd /usr/share/applications/
 ```
 
 Para listar todos os arquivos dentro do diretório:
 
 ```bash
-ls
+$ ls
 ```
 
 Após localizar o arquivo `.desktop` do aplicativo que deseja ocultar, basta adicionar o parâmetro `NoDisplay=true` ao final do arquivo e, em seguida, salvar e fechar. Porém, para que as mudanças permaneçam mesmo após a atualização do aplicativo, é necessário copiar esses arquivos para a sua pasta local de configurações, `~/.local/share/applications/`. Quando você coloca um arquivo `.desktop` com o mesmo nome nessa pasta, o sistema ignora o arquivo original em `/usr/share/`. Como essa pasta está dentro da sua `Home`, o pacman nunca vai mexer nela.
@@ -33,8 +33,9 @@ xdvi.desktop
 
 Em vez de copiar e editar um por um manualmente, você pode usar este comando no terminal para automatizar o processo para todos os itens da sua lista (**Cole o comando completo no terminal**):
 
+::: code-group
 ```bash
-mkdir -p ~/.local/share/applications/
+$ mkdir -p ~/.local/share/applications/
 
 apps=(
   avahi-discover.desktop
@@ -60,9 +61,7 @@ for app in "${apps[@]}"; do
 done
 ```
 
-Caso utilize o **fish shell** ao invés do **bash shell**, execute:
-
-```bash
+```fish
 mkdir -p ~/.local/share/applications/
 
 set apps avahi-discover.desktop bssh.desktop bvnc.desktop qv4l2.desktop qvidcap.desktop nm-connection-editor.desktop nvim.desktop xdvi.desktop
@@ -78,19 +77,23 @@ for app in $apps
   end
 end
 ```
+:::
 
+:::tip AVISO
+Note que também há uma versão do código para o `fish`, caso o utilize como shell padrão.
+:::
 ## Instalação do tema adw-gtk3
 
 O tema `adw-gtk3` deixa a aparência dos aplicativos ainda baseados em GTK3 semelhante à dos aplicativos já portados para GTK4. No Arch Linux, esse tema já está disponível nos repositórios oficiais da distribuição:
 
 ```bash
-sudo pacman -S adw-gtk-theme
+$ sudo pacman -S adw-gtk-theme
 ```
 
 Para aplicação do tema em aplicativos flatpak é recomendado também instalar:
 
 ```bash
-flatpak install org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark
+$ flatpak install org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark
 ```
 
 Após isso, basta selecionar o tema através do aplicativo **Ajustes**.
@@ -102,7 +105,7 @@ Para personalizar o terminal no Arch Linux, serão necessários três pacotes. O
 Instalação dos pacotes:
 
 ```bash
-sudo pacman -S fish starship eza ttf-hack-nerd
+$ sudo pacman -S fish starship eza ttf-hack-nerd
 ```
 
 Incluí o pacote `ttf-hack-nerd`, necessário para a exibição correta dos ícones. Após a instalação dos pacotes, acesse as configurações do terminal e escolha a fonte **Hack Nerd Font Mono** como padrão.
@@ -110,7 +113,7 @@ Incluí o pacote `ttf-hack-nerd`, necessário para a exibição correta dos íco
 Torne o `fish` o seu shell padrão:
 
 ```bash
-chsh -s /usr/bin/fish
+$ chsh -s /usr/bin/fish
 ```
 
 Para que esse comando tenha efeito, é necessário encerrar a sessão (log out) e entrar novamente, mas isso pode ser feito após concluir todo o processo de customização.
@@ -118,18 +121,18 @@ Para que esse comando tenha efeito, é necessário encerrar a sessão (log out) 
 Para configuração do fish, crie o diretório:
 
 ```bash
-mkdir -p ~/.config/fish
+$ mkdir -p ~/.config/fish
 ```
 
 Crie e edite o arquivo:
 
 ```bash
-nano ~/.config/fish/config.fish
+$ nano ~/.config/fish/config.fish
 ```
 
 Adicione o seguinte conteúdo:
 
-```bash
+```bash:line-numbers
 starship init fish | source
 
 # Silencia a mensagem de boas vindas do fish
@@ -148,12 +151,12 @@ alias lt='eza --tree --level=2 --icons --no-quotes'
 Para configuração do `Starship` abra ou crie, se não existir, o seguinte arquivo:
 
 ```bash
-nano ~/.config/starship.toml
+$ nano ~/.config/starship.toml
 ```
 
 Dentro dele, cole:
 
-```bash
+```bash:line-numbers
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
@@ -341,11 +344,10 @@ vimcmd_visual_symbol = '[❮](bold fg:color_yellow)'
 Depois de salvar e fechar o arquivo, reinicie a seção.
 
 ::: tip DICA BÔNUS 
-Se você utiliza pacotes Flatpak e do AUR com o gerenciador de pacotes `yay`, além de usar o fish como shell padrão, é possível criar um atalho chamado `up` para atualizar todos os pacotes do sistema de uma única vez. Basta colar o comando completo abaixo no terminal e executá-lo:
-:::
+Se você utiliza pacotes Flatpak e do AUR com o gerenciador de pacotes `yay`, além de usar o `fish` como shell padrão, é possível criar um atalho chamado `up` para atualizar todos os pacotes do sistema de uma única vez. Basta colar o comando completo abaixo no terminal e executá-lo:
 
 ```bash
-echo 'function up
+$ echo 'function up
   sudo -v
 
   echo -e "\n"(set_color --bold brblue)"🚀 Atualizando Flatpaks..."(set_color normal)"\n"
@@ -355,13 +357,13 @@ echo 'function up
   yay -Syu
 end' > ~/.config/fish/functions/up.fish
 ```
-
+:::
 ## Trocando o Gnome-Console pelo terminal Ghostty
 
 O Ghostty é um emulador de terminal excelente, escrito em Zig, incrivelmente rápido e com renderização via GPU. Para instalá-lo:
 
 ```bash
-sudo pacman -S ghostty ghostty-nautilus ttf-hack-nerd ttf-jetbrains-mono-nerd
+$ sudo pacman -S ghostty ghostty-nautilus ttf-hack-nerd ttf-jetbrains-mono-nerd
 ```
 
 O pacote `ghostty-nautilus` permite integrar o Ghostty ao explorador de arquivos do Gnome, o nautilus. Os pacotes `ttf-hack-nerd` e `ttf-jetbrains-mono-nerd`, são apenas fontes que recomendo para serem utilizados com o Ghostty.
@@ -369,13 +371,19 @@ O pacote `ghostty-nautilus` permite integrar o Ghostty ao explorador de arquivos
 Após a instalação, podemos remover o `gnome-console`:
 
 ```bash
-sudo pacman -R gnome-console
+$ sudo pacman -R gnome-console
 ```
 
-Diferente de outros emuladores de terminal, o Ghostty não possui uma interface de configurações embutida. Suas configurações são realizadas em um arquivo de texto separado, `~/.config/ghostty/config`. Abra o arquivo com:
+Diferente de outros emuladores de terminal, o Ghostty não possui uma interface de configurações embutida. Suas configurações são realizadas em um arquivo de texto separado, `~/.config/ghostty/config.ghostty`. Abra o arquivo com:
 
 ```bash
-# ~/.config/ghostty/config
+$ nano ~/.config/ghostty/config.ghostty
+```
+
+E cole o seguinte conteúdo dentro do arquivo:
+
+```bash:line-numbers
+# ~/.config/ghostty/config.ghostty
 
 # --- Fonte ---
 # font-family = "JetBrainsMono Nerd Font"
