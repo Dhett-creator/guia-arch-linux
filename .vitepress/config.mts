@@ -60,7 +60,7 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+      { icon: 'github', link: 'https://github.com/Dhett-creator/guia-arch-linux' }
     ],
 
     // Traduções da interface nativa do VitePress
