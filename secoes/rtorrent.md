@@ -306,7 +306,7 @@ ui.color.even.set = "bold"
 ### END OF rtorrent.rc ###
 #############################################################################
 ```
-:::info
+::: info
 As linhas destacadas requerem adaptação por parte do usuário.
 :::
 
