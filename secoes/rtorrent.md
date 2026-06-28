@@ -1,8 +1,12 @@
 # rTorrent
 
+O rTorrent é um cliente BitTorrent leve e baseado em terminal, projetado para oferecer alto desempenho com baixo consumo de recursos. Ele opera inteiramente em modo texto e é amplamente utilizado em servidores e sistemas Linux devido à sua eficiência, estabilidade e alta capacidade de automação, especialmente quando integrado a ferramentas como `tmux`, *scripts* e interfaces gráficas web, como o Flood.
+
+Em seguida, será apresentado o passo a passo para instalação e integração dessas ferramentas ao rTorrent.
+
 ## Instalação e configuração
 
-Instale os seguintes pacotes:
+Primeiro instale os seguintes pacotes:
 
 ```bash
 $ sudo pacman -S rtorrent tmux trash-cli
@@ -107,9 +111,14 @@ protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
 ## 6. LIMITES DE RECURSOS DO SISTEMA
 #############################################################################
 
-## Arquivos e sockets abertos
-network.max_open_files.set = 600
-network.max_open_sockets.set = 512
+## Limite de arquivos físicos abertos simultaneamente
+system.sockets.files.max_alloc.set = 600
+
+## Limite de sockets exclusivos para a interface web Flood (RPC)
+system.sockets.rpc.max_alloc.set = 32
+
+## Aplica as regras de alocação acima e reequilibra os recursos (Obrigatório)
+system.sockets.adjust_alloc =
 
 #############################################################################
 ## 7. USO DE MEMÓRIA
@@ -310,8 +319,8 @@ ui.color.even.set = "bold"
 As linhas destacadas requerem adaptação por parte do usuário.
 :::
 
-::: tip AVISO
-Essa configuração foi criada e ajustada para as versões mais recentes do rTorrent (&ge; 0.16.14). Ela oferece uma automação básica para a adição e remoção de arquivos, exigindo apenas que o usuário ajuste corretamente os diretórios de criação de pastas e de armazenamento dos arquivos baixados. Foram definidos três diretórios `watch` para o monitoramento de arquivos `.torrent`. Basta que o usuário adicione um ou mais arquivos `.torrent` em qualquer um desses diretórios para que o download seja iniciado automaticamente no diretório correspondente.
+::: tip NOTA
+Essa configuração foi criada e ajustada para a versão mais recente do rTorrent (0.16.15). Ela oferece uma automação básica para a adição e remoção de arquivos, exigindo apenas que o usuário ajuste corretamente os diretórios de criação de pastas e de armazenamento dos arquivos baixados. Foram definidos três diretórios `watch` para o monitoramento de arquivos `.torrent`. Basta que o usuário adicione um ou mais arquivos `.torrent` em qualquer um desses diretórios para que o download seja iniciado automaticamente no diretório correspondente.
 :::
 
 Para verificar rapidamente se a configuração está correta, inicie o rTorrent no terminal:
@@ -364,12 +373,14 @@ Atualize o terminal atual:
 $ source ~/.bashrc
 ```
 
-Agora, podemos usar o atalho `rt` para acessar a interface do rTorrent. Porém, não teste esse comando ainda, não ativamos o serviço do rTorrent para que haja uma seção ativa do `tmux` para ser acessada.
+Agora, podemos usar o atalho `rt` para acessar a interface do rTorrent. Porém, *não teste esse comando ainda*, não ativamos o serviço do rTorrent para que haja uma seção ativa do `tmux` para ser acessada.
 
 Para ativar o serviço do rTorrent:
 
 ```bash
 $ sudo systemctl daemon-reload
+```
+```bash
 $ sudo systemctl enable --now rtorrent
 ```
 
@@ -383,9 +394,9 @@ Caso esteja funcionando corretamente, teste o atalho de acesso a interface digit
 
 ## Notificações no rTorrent
 
-Assim como o qBittorrent-nox, o rTorrent também não possui um sistema de notificações nativo. Porém, podemos seguir os mesmos passos realizados para o qBittorrent e criar um sistema de notificações para o rTorrent.
+Assim como o qBittorrent-nox, o rTorrent também não possui um sistema de notificações nativo. Porém, podemos seguir os mesmos passos realizados para o qBittorrent-nox e criar um sistema de notificações para o rTorrent.
 
-Primeiro, vamos criar os dois scripts responsáveis por notificar quando um torrent é adicionado e quando um download é finalizado:
+Primeiro, vamos criar os dois *scripts* responsáveis por notificar quando um *torrent* é adicionado e quando um *download* é finalizado:
 
 ```bash
 $ sudo nano /usr/local/bin/rtorrent-added.sh
@@ -416,7 +427,7 @@ export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
   5000 > /dev/null
 ```
 
-Agora, vamos criar o script para notificar quando um download for finalizado:
+Agora, vamos criar o *script* para notificar quando um *download* for finalizado:
 
 ```bash
 $ sudo nano /usr/local/bin/rtorrent-downloaded.sh
@@ -447,13 +458,13 @@ export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
   5000 > /dev/null
 ```
 
-Agora, conceda permissão de execução para os scripts:
+Agora, conceda permissão de execução para os *scripts*:
 
 ```bash
 $ sudo chmod +x /usr/local/bin/rtorrent-*.sh
 ```
 
-Importante, para que esses scripts sejam executados pelo rTorrent, as seguintes linhas precisam fazer parte do seu arquivo de configurações `.rtorrent.rc`:
+Importante, para que esses *scripts* sejam executados pelo rTorrent, as seguintes linhas precisam fazer parte do seu arquivo de configurações `.rtorrent.rc`:
 
 ```bash
 method.set_key = event.download.finished,notify_me,"execute=/usr/local/bin/rtorrent-downloaded.sh,$d.name="
@@ -468,13 +479,15 @@ $ sudo systemctl restart rtorrent
 
 ## Flood + rTorrent
 
-Primeiro, precisamos instalar o pacote `flood-bin` disponível no AUR:
+O Flood é uma interface web moderna para gerenciamento de clientes BitTorrent, desenvolvida para oferecer uma experiência de uso intuitiva e responsiva. Compatível com o rTorrent, ele permite acompanhar *downloads*, adicionar e gerenciar *torrents*, configurar o cliente e monitorar seu funcionamento diretamente pelo navegador, sem a necessidade de acessar o terminal.
+
+O Flood está disponível no AUR e pode ser instalado com o seguinte comando:
 
 ```bash
 $ yay -S flood-bin
 ```
 
-Precisamos configurar o rTorrent para criar o arquivo de comunicação (Socket) e dar as permissões corretas para o Flood acessá-lo. Para isso, garanta que as seguintes linhas façam parte do seu arquivo de configurações `.rtorrent.rc`: 
+Após a instalação, é necessário configurar o rTorrent para criar o arquivo de comunicação (*socket*) utilizado pelo Flood. Também é preciso garantir que esse arquivo possua as permissões adequadas para que a interface consiga acessá-lo. Para isso, garanta que as seguintes linhas estão presentes no arquivo de configuração `.rtorrent.rc:`
 
 ```bash:line-numbers
 # Configuração de comunicação via Socket Unix
@@ -523,6 +536,8 @@ Para habilitar e iniciar o serviço:
 
 ```bash
 $ sudo systemctl daemon-reload
+```
+```bash
 $ sudo systemctl enable --now flood
 ```
 
@@ -540,13 +555,13 @@ http://localhost:3000
 
 Escolha um nome de usuário e senha para proteger o acesso à interface. Em seguida, escolha o cliente, que nesse caso pode ser `Torrent`. Em `Connection Type`, selecione `Socket`. Em `Socket Path`, adicione o caminho `~/.rtorrent/rpc.socket`. Por ultimo, clique em `Access`.
 
-## Script para apagar arquivos .torrent legados
+## *Script* para apagar arquivos *.torrent* legados
 
-Ao excluir vários arquivos simultaneamente diretamente pela interface do Flood, é comum que nem todos os arquivos `.torrent` correspondentes sejam removidos das pastas monitoradas. Como consequência, ao reiniciar o sistema, o rTorrent tenta baixar novamente esses torrents, já que os arquivos `.torrent` ainda permanecem nas pastas monitoradas.
+Ao excluir vários arquivos simultaneamente diretamente pela interface do Flood, é comum que nem todos os arquivos `.torrent` correspondentes sejam removidos das pastas monitoradas. Como consequência, ao reiniciar o sistema, o rTorrent tenta baixar novamente esses *torrents*, já que os arquivos `.torrent` ainda permanecem nas pastas monitoradas.
 
-Para contornar esse problema, podemos criar um script que realize verificações periódicas, comparando os torrents atualmente em `seed` no rTorrent com os arquivos `.torrent` existentes nas pastas monitoradas.
+Para contornar esse problema, podemos criar um *script* que realize verificações periódicas, comparando os *torrents* atualmente em `seed` no rTorrent com os arquivos `.torrent` existentes nas pastas monitoradas.
 
-Primeiro, crie o arquivo do script:
+Primeiro, crie o arquivo do *script*:
 
 ```bash
 $ sudo nano /usr/local/bin/rtorrent-clean.py
@@ -657,7 +672,7 @@ if __name__ == "__main__":
     main()
 ```
 
-Agora, crie o arquivo de serviço para o script:
+Agora, crie o arquivo de serviço para o *script*:
 
 ```bash
 $ sudo nano /etc/systemd/system/rtorrent-clean.service
@@ -680,7 +695,7 @@ ExecStart=/usr/bin/python3 /usr/local/bin/rtorrent-clean.py
 WantedBy=multi-user.target
 ```
 
-Em seguida, vamos criar um arquivo de `timer` para que o script seja executado periodicamente:
+Em seguida, vamos criar um arquivo de `timer` para que o *script* seja executado periodicamente:
 
 ```bash
 $ sudo nano /etc/systemd/system/rtorrent-clean.timer
@@ -701,7 +716,7 @@ Unit=rtorrent-clean.service
 WantedBy=timers.target
 ```
 
-Conceda permissão de execução para o script:
+Conceda permissão de execução para o *script*:
 
 ```bash
 $ sudo chmod +x /usr/local/bin/rtorrent-clean.py
@@ -711,6 +726,8 @@ Por ultimo, recarregue e inicie o serviço:
 
 ```bash
 $ sudo systemctl daemon-reload
+```
+```bash
 $ sudo systemctl enable --now rtorrent-clean.timer
 ```
 
@@ -732,31 +749,27 @@ Após salvar o arquivo, você deve recarregar as configurações do `systemd` e 
 
 ```bash
 $ sudo systemctl daemon-reload
+```
+```bash
 $ sudo systemctl restart flood
 ```
 
-O `0.0.0.0` abre o Flood para qualquer pessoa na sua rede. Se você quiser ser mais restritivo e garantir que apenas você acesse de outros dispositivos, o ideal é usar o Firewall do Arch (UFW) para limitar o acesso aos IPs da sua casa:
+O parâmetro `0.0.0.0` concede acesso ao Flood para qualquer dispositivo conectado em sua rede. 
 
-```bash
-$ sudo ufw allow from 192.168.1.0/24 to any port 3000
-```
-::: tip AVISO
-Esse comando permite acesso à porta 3000 apenas para IPs que começam com `192.168.1.x`.
-:::
 Após isso, para acessar a interface do Flood a partir de outro computador, basta utilizar o endereço `http://IP_DA_MAQUINA:3000/overview`, colocando apenas o IP da maquina onde o rTorrent e o Flood estão rodando.
 
 Caso deseje reverter essas mudanças, edite o arquivo de serviço do Flood novamente e apague `--host 0.0.0.0`. Depois, reinicie o serviço:
 
 ```bash
 $ sudo systemctl daemon-reload
+```
+```bash
 $ sudo systemctl restart flood
 ```
 
-Para deletar a permissão adicionada ao `ufw`, use `sudo ufw status numbered` para listar todas as regras ativas e depois `sudo ufw delete número_da_regra` para excluir a regra.
+## Ordem de desmontagem no *systemd*
 
-## Criando uma dependência entre o rTorrent e o disco
-
-No meu caso, ao desligar o sistema, o `systemd` costuma tentar desmontar o disco que armazena os arquivos do rTorrent antes de encerrar o próprio serviço. Isso resulta em um erro, pois o disco ainda está em uso, gerando uma mensagem informando a falha na desmontagem da partição correspondente.
+Semelhante ao que foi relatado no caso do qBittorrent-nox, ao desligar o sistema, o `systemd` costuma tentar desmontar a partição que armazena os arquivos do rTorrent antes de encerrar o próprio serviço. Isso resulta em um erro, pois o disco ainda está em uso, gerando uma mensagem informando a falha na desmontagem da partição correspondente.
 
 Embora esse comportamento não cause problemas práticos no uso cotidiano, considerei mais adequado ajustar a ordem de finalização do rTorrent, de modo a evitar esse aviso e garantir um desligamento mais limpo do sistema.
 
@@ -766,15 +779,18 @@ Para isso, vamos criar a seguinte pasta e arquivo de configuração, respectivam
 
 ```bash
 $ sudo mkdir -p /etc/systemd/system/rtorrent.service.d/
+```
+```bash
 $ sudo nano /etc/systemd/system/rtorrent.service.d/dependencia.conf
 ```
+
 Dentro do arquivo, cole exatamente este conteúdo:
 
 ```bash:line-numbers {3,4}
 [Unit]
 # Isso força a ordem no desligamento
-After=mnt-md0.mount
-Requires=mnt-md0.mount
+After=mnt-sdb1.mount
+Requires=mnt-sdb1.mount
 
 [Service]
 # Garante que o systemd espere os comandos ExecStop terminarem
@@ -782,8 +798,8 @@ Requires=mnt-md0.mount
 KillSignal=SIGINT
 ```
 
-::: tip AVISO
-Mais uma vez estou utilizando o disco `md0` como exemplo. Portanto, adapte de acordo com a sua configuração.
+::: tip NOTA
+Mais uma vez estou utilizando o disco `sdb1` como exemplo. Portanto, adapte de acordo com a sua configuração.
 :::
 
 Após salvar e fechar o arquivo, recarregue o `daemon` e teste:

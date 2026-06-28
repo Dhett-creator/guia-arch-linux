@@ -1,6 +1,6 @@
 # Procedimentos essenciais
 
-A seguir, serão apresentados alguns passos essenciais após uma instalação nova do Arch Linux, bem como recomendações de ajustes que podem otimizar ainda mais a experiência de uso do sistema.
+A seguir, serão apresentados alguns procedimentos que considero essenciais após uma instalação limpa do Arch Linux, bem como recomendações de configurações e ajustes que podem otimizar o desempenho, a usabilidade e a experiência geral de uso do sistema.
 
 ## Edição do arquivo pacman.conf
 
@@ -10,13 +10,13 @@ Para realizar alterações neste arquivo, primeiro devemos acessá-lo através d
 $ sudo nano /etc/pacman.conf
 ```
 
-Feito isso, navegue pelo arquivo até encontrar a linha `#ParallelDownloads = 5`. Após encontrar, descomente a linha removendo o caractere `#`. Com o parâmetro `ParallelDownloads = 5` descomentado, as instalações e atualizações de pacotes passarão a ser baixadas utilizando 5 downloads simultaneamente, proporcionando um melhor aproveitamento da banda de internet. Para melhorar a experiência ao navegar em diretórios pelo terminal, recomenda-se que a linha `#Color` também seja descomentada. Essa linha habilita as cores no terminal.
+Feito isso, navegue pelo arquivo até encontrar a linha `#ParallelDownloads = 5`. Após encontrar, descomente a linha removendo o caractere `#`. Com o parâmetro `ParallelDownloads = 5` descomentado, as instalações e atualizações de pacotes passarão a ser baixadas utilizando 5 downloads simultaneamente, proporcionando um melhor aproveitamento da banda de internet. Além disso, recomenda-se descomentar a linha `#Color`, que habilita a exibição de cores no terminal. Esse recurso melhora a legibilidade das informações apresentadas, tornando a saída dos comandos mais clara e organizada.
 
-Opcionalmente, podemos acrescentar a linha `ILoveCandy` ao arquivo. Está linha irá modificar a aparência das barras de progresso no terminal para algo semelhante ao Game Pacman. Esta linha pode ser acrescentada logo após o parâmetro `ParallelDownloads = 5`. Essa modificação é valida apenas para o gerenciador de pacotes `pacman`.
+Opcionalmente, podemos acrescentar a linha `ILoveCandy` ao arquivo. Está linha irá modificar a aparência das barras de progresso no terminal para algo semelhante ao game **Pacman**. Esta linha pode ser acrescentada logo após o parâmetro `ParallelDownloads = 5`. Essa modificação é valida apenas para o gerenciador de pacotes `pacman`.
 
-## Instalação de um gestor de Firmware
+## Instalação de um gestor de *Firmware*
 
-Para a gestão/atualização de firmware da sua maquina, existe um pacote chamado `fwupd`. Quando instalado, este pacote se integra automaticamente a Gnome Software, permitindo que a mesma procure também por atualizações de firmware, além das atualizações convencionais de programas. Para instalação do `fwupd`, basta rodar:
+Para a gestão/atualização de *firmware* da sua maquina, existe um pacote chamado `fwupd`. Quando instalado, este pacote se integra automaticamente a Gnome Software, permitindo que a mesma procure também por atualizações de *firmware*, além das atualizações convencionais de programas. Para instalação do `fwupd`, basta rodar:
 
 ```bash
 $ sudo pacman -S fwupd
@@ -32,11 +32,10 @@ $ sudo pacman -S ntfs-3g
 
 ## Ativação do serviço de Bluetooth
 
-Nas versões atuais do archinstall, é oferecida ao usuário a opção de habilitar o serviço de bluetooth durante a instalação do sistema. Caso a ativação dessa opção seja esquecida, após a instalação basta executar os seguintes comandos para ativar o serviço:
+Nas versões atuais do *Archinstall*, é oferecida ao usuário a opção de habilitar o serviço de *bluetooth* durante a instalação do sistema. Caso a ativação dessa opção seja esquecida, após a instalação basta executar os seguintes comandos para ativar o serviço:
 
 ```bash
-$ sudo systemctl start bluetooth.service
-$ sudo systemctl enable bluetooth.service
+$ sudo systemctl enable --now bluetooth.service
 ```
 
 ## Manutenção do cache do pacman
@@ -53,9 +52,9 @@ Para usar essa ferramenta, basta executar:
 $ sudo paccache -r
 ```
 
-Por padrão, o `paccache` remove todos os pacotes do cache que não estão instalados no sistema e mantem até duas versões diferentes do Kernel.
+Por padrão, o `paccache` remove todos os pacotes do cache que não estão instalados no sistema e mantem até duas versões diferentes do *Kernel*.
 
-Para não ter que se preocupar em ter que rodar esse comando eventualmente no futuro, você pode ativar um serviço do systemd:
+Para não ter que se preocupar em ter que rodar esse comando eventualmente no futuro, você pode ativar um serviço do `systemd`:
 
 ```bash
 $ sudo systemctl enable --now paccache.timer
@@ -75,18 +74,19 @@ Para realizar a instalação de um firewall, vamos instalar o pacote `ufw`:
 $ sudo pacman -S ufw
 ```
 
-Assim que instalado, será necessário a ativação do serviço do `ufw`. Os comando a seguir servem, respectivamente, para inicialização e ativação do serviço sempre que o sistema iniciar:
+Assim que instalado, será necessário a ativação do serviço do `ufw`:
 
 ```bash
-$ sudo systemctl start ufw
-$ sudo systemctl enable ufw
+$ sudo systemctl enable --now ufw
 ```
 
-## Alteração do tamanho da memória Swap
+Além de iniciar o serviço imediatamente, esse comando também o habilita para ser executado automaticamente durante a inicialização do sistema.
 
-O script de instalação do archinstall configura, por padrão, um valor de memória swap em torno de 4 GB. Esse valor pode ser considerado pequeno para computadores com 8 GB ou mais de RAM, especialmente quando o usuário costuma utilizar o modo de suspensão, no qual o estado atual da sessão é salvo na memória swap.
+## Alteração do tamanho da memória *swap*
 
-Por esse motivo, é importante definir um valor adequado de acordo com cada situação. Pessoalmente, costumo adotar uma quantidade de swap equivalente à memória RAM do dispositivo. Ou seja, se o computador possui 8 GB de RAM, defino 8 GB de swap; se possui 16 GB de RAM, defino também 16 GB de swap.
+O *script* de instalação do *Archinstall* configura, por padrão, um valor de memória *swap* em torno de 4 GB. Esse valor pode ser considerado pequeno para computadores com 8 GB ou mais de RAM, especialmente quando o usuário costuma utilizar o modo de suspensão, no qual o estado atual da sessão é salvo na memória *swap*.
+
+Por esse motivo, é importante definir um valor adequado de acordo com cada caso. Pessoalmente, costumo adotar uma quantidade de *swap* equivalente à memória RAM do dispositivo. Ou seja, se o computador possui 8 GB de RAM, defino 8 GB de *swap*; se possui 16 GB de RAM, defino também 16 GB de *swap*.
 
 Para ajustarmos esse valor, devemos editar o arquivo de configuração do `zram-generator`:
 
@@ -102,11 +102,11 @@ zram-size = 8192
 compression-algorithm = zstd
 ```
 
-Neste exemplo, configurei o equivalente a aproximadamente 8 GB de swap. No entanto, a quantidade ideal fica a critério do usuário.
+Neste exemplo, configurei o equivalente a aproximadamente 8 GB de *swap*. No entanto, a quantidade ideal fica a critério do usuário.
 
-## Instalação de codecs multimídia
+## Instalação de *codecs* multimídia
 
-Para que não haja possíveis incompatibilidades com formatos de mídias específicos, o comando a seguir instala todos os codecs necessários para quaisquer tipos de arquivos de mídia:
+Para que não haja possíveis incompatibilidades com formatos de mídias específicos, o comando a seguir instala todos os *codecs* necessários para quaisquer tipos de arquivos de mídia:
 
 ```bash
 $ sudo pacman -S ffmpeg gst-plugins-ugly gst-plugins-good gst-plugins-base gst-plugins-bad gst-libav gstreamer
@@ -124,22 +124,23 @@ Para ativá-lo e evitar conflitos com o `systemd-rfkill`:
 
 ```bash
 $ sudo systemctl enable tlp.service
+```
+```bash
 $ sudo systemctl mask systemd-rfkill.service systemd-rfkill.socket
 ```
-
 Após a reinicialização o modulo já estará funcionando.
 
-## Adicionar suporte a emojis
+## Adicionar suporte a *emojis*
 
-A fonte padrão do Arch Linux não possui suporte para emojis, acarretando em fontes genéricas ou transfiguradas em determinadas ocasiões. O comando a seguir adiciona um conjunto de emojis ao sistema:
+A fonte padrão do Arch Linux não possui suporte para *emojis*, acarretando em fontes genéricas ou transfiguradas em determinadas ocasiões. O comando a seguir adiciona um conjunto de *emojis* ao sistema:
 
 ```bash
 $ sudo pacman -S noto-fonts noto-fonts-emoji ttf-liberation ttf-droid adobe-source-sans-fonts ttf-dejavu
 ```
 
-## Adicionar suporte a geração de miniaturas de vídeos no nautilus
+## Adicionar suporte a geração de miniaturas de vídeos no *nautilus*
 
-Após a mudança de player de vídeo padrão que o Gnome sofreu, as miniaturas dos vídeos no nautilus são geradas agora pelo pacote `ffmpegthumbnailer`. Esse pacote dever ser instalado junto com o `gst-plugin-ffmpeg`: 
+Após a mudança de *player* de vídeo padrão que o Gnome sofreu, as miniaturas dos vídeos no *nautilus* são geradas agora pelo pacote `ffmpegthumbnailer`. Esse pacote dever ser instalado junto com o `gst-plugin-ffmpeg`: 
 
 ```bash
 $ sudo pacman -S ffmpegthumbnailer gst-plugin-ffmpeg
@@ -151,16 +152,22 @@ Após isso é necessário apagar o cache de miniaturas e gerá-las novamente:
 $ rm -rf ~/.cache/thumbnails/*
 ```
 
-Feito isso, abra o nautilus novamente e navegue até a pasta de vídeos e verifique o resultado.
+Feito isso, abra o *nautilus* novamente e navegue até a pasta de vídeos e verifique o resultado.
 
 ## Adicionar suporte ao AUR (opcional)
 
-O Arch User Repository (AUR) é onde a comunidade compartilha pacotes que não estão nos repositórios oficiais. Para instalar programas do AUR é necessário um helper. O `yay` é um dos mais populares, e para instalá-lo basta:
+O *Arch User Repository* (AUR) é onde a comunidade compartilha pacotes que não estão nos repositórios oficiais. Para instalar programas do AUR é necessário um *helper*. O `yay` é um dos mais populares, e para instalá-lo basta:
 
 ```bash
 $ sudo pacman -S --needed git base-devel
+```
+```bash
 $ git clone https://aur.archlinux.org/yay.git
+```
+```bash
 $ cd yay
+```
+```bash
 $ makepkg -si
 ```
 
@@ -175,6 +182,6 @@ $ yay -S nome-do-pacote
 A seguir deixarei um comando de instalação de alguns pacotes que não são obrigatórios para todos os usuários, mas acredito que podem ser úteis em diversas ocasiões:
 
 ```bash
-$ sudo pacman -S unrar p7zip fastfetch exfatprogs dosfstools mediainfo
+$ sudo pacman -S unrar p7zip fastfetch exfatprogs dosfstools mediainfo rsync
 ```
 
