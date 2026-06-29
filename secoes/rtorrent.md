@@ -1,6 +1,6 @@
 # rTorrent
 
-O rTorrent é um cliente BitTorrent leve e baseado em terminal, projetado para oferecer alto desempenho com baixo consumo de recursos. Ele opera inteiramente em modo texto e é amplamente utilizado em servidores e sistemas Linux devido à sua eficiência, estabilidade e flexibilidade. Além disso, pode ser facilmente integrado a ferramentas como `tmux`, *scripts* de automação e interfaces web, possibilitando tanto o gerenciamento local quanto remoto. Essas características tornam o rTorrent uma ferramenta versátil e poderosa para diferentes cenários de uso. 
+O rTorrent é um cliente BitTorrent leve e baseado em terminal, projetado para oferecer alto desempenho com baixo consumo de recursos. Ele opera inteiramente em modo texto e é amplamente utilizado em servidores e sistemas Linux devido à sua eficiência, estabilidade e flexibilidade. Além disso, pode ser facilmente integrado a ferramentas como `tmux`, *scripts* de automação e interfaces web, possibilitando tanto o gerenciamento local quanto remoto. Essas características tornam o rTorrent uma ferramenta versátil e poderosa para diferentes cenários de atuação. 
 
 ## Instalação e configuração
 
