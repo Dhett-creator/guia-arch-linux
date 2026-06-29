@@ -1,12 +1,10 @@
 # rTorrent
 
-O rTorrent é um cliente BitTorrent leve e baseado em terminal, projetado para oferecer alto desempenho com baixo consumo de recursos. Ele opera inteiramente em modo texto e é amplamente utilizado em servidores e sistemas Linux devido à sua eficiência, estabilidade e alta capacidade de automação, especialmente quando integrado a ferramentas como `tmux`, *scripts* e interfaces gráficas web, como o Flood.
-
-Em seguida, será apresentado o passo a passo para instalação e integração dessas ferramentas ao rTorrent.
+O rTorrent é um cliente BitTorrent leve e baseado em terminal, projetado para oferecer alto desempenho com baixo consumo de recursos. Ele opera inteiramente em modo texto e é amplamente utilizado em servidores e sistemas Linux devido à sua eficiência, estabilidade e flexibilidade. Além disso, pode ser facilmente integrado a ferramentas como `tmux`, *scripts* de automação e interfaces web, possibilitando tanto o gerenciamento local quanto remoto. Essas características tornam o rTorrent uma ferramenta versátil e poderosa para diferentes cenários de uso. 
 
 ## Instalação e configuração
 
-Primeiro instale os seguintes pacotes:
+Vamos a instalação do rTorrent. Primeiro, instale os seguintes pacotes:
 
 ```bash
 $ sudo pacman -S rtorrent tmux trash-cli
@@ -320,7 +318,7 @@ As linhas destacadas requerem adaptação por parte do usuário.
 :::
 
 ::: tip NOTA
-Essa configuração foi criada e ajustada para a versão mais recente do rTorrent (0.16.15). Ela oferece uma automação básica para a adição e remoção de arquivos, exigindo apenas que o usuário ajuste corretamente os diretórios de criação de pastas e de armazenamento dos arquivos baixados. Foram definidos três diretórios `watch` para o monitoramento de arquivos `.torrent`. Basta que o usuário adicione um ou mais arquivos `.torrent` em qualquer um desses diretórios para que o download seja iniciado automaticamente no diretório correspondente.
+Essa configuração foi criada e ajustada para a versão mais recente do rTorrent (0.16.15). Ela oferece uma automação básica para a adição e remoção de arquivos, exigindo apenas que o usuário ajuste corretamente os diretórios de criação de pastas e de armazenamento dos arquivos baixados. Foram definidos três diretórios `watch` para o monitoramento de arquivos `.torrent`. Basta que o usuário adicione um ou mais arquivos `.torrent` em qualquer um desses diretórios para que o *download* seja iniciado automaticamente no diretório correspondente.
 :::
 
 Para verificar rapidamente se a configuração está correta, inicie o rTorrent no terminal:
@@ -355,7 +353,7 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-Para acessar o rTorrent através de uma seção `tmux`, utiliza-se: `/usr/bin/tmux a -t rtorrent`. Porém, para facilitar o acesso, iremos criar um alias para esse comando:
+Para acessar o rTorrent através de uma seção `tmux`, utiliza-se: `/usr/bin/tmux a -t rtorrent`. Porém, para facilitar o acesso, iremos criar um `alias` para esse comando:
 
 ```bash
 $ nano ~/.bashrc
@@ -373,7 +371,7 @@ Atualize o terminal atual:
 $ source ~/.bashrc
 ```
 
-Agora, podemos usar o atalho `rt` para acessar a interface do rTorrent. Porém, *não teste esse comando ainda*, não ativamos o serviço do rTorrent para que haja uma seção ativa do `tmux` para ser acessada.
+Agora, podemos usar o atalho `rt` para acessar a interface do rTorrent. Porém, **não teste esse comando ainda**, não ativamos o serviço do rTorrent para que haja uma seção ativa do `tmux` para ser acessada.
 
 Para ativar o serviço do rTorrent:
 
