@@ -30,7 +30,7 @@ Por padrão o Arch Linux não traz suporte para sistema de arquivos do tipo NTFS
 $ sudo pacman -S ntfs-3g
 ```
 
-## Ativação do serviço de Bluetooth
+## Ativação do serviço de *Bluetooth*
 
 Nas versões atuais do *Archinstall*, é oferecida ao usuário a opção de habilitar o serviço de *bluetooth* durante a instalação do sistema. Caso a ativação dessa opção seja esquecida, após a instalação basta executar os seguintes comandos para ativar o serviço:
 
@@ -60,15 +60,15 @@ Para não ter que se preocupar em ter que rodar esse comando eventualmente no fu
 $ sudo systemctl enable --now paccache.timer
 ```
 
-Isso vai rodar a limpeza uma vez por semana de forma silenciosa. Para ter certeza de que o comando está configurado para rodar semanalmente, você pode usar o comando de listagem de timers:
+Isso vai rodar a limpeza uma vez por semana de forma silenciosa. Para ter certeza de que o comando está configurado para rodar semanalmente, você pode usar o comando de listagem de *timers*:
 
 ```bash
 $ systemctl list-timers paccache.timer
 ```
 
-## Instalação e ativação do firewall
+## Instalação e ativação do *firewall*
 
-Para realizar a instalação de um firewall, vamos instalar o pacote `ufw`:
+Para realizar a instalação de um *firewall*, vamos instalar o pacote `ufw`:
 
 ```bash
 $ sudo pacman -S ufw
