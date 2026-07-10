@@ -16,7 +16,7 @@ Para listar todos os arquivos dentro do diretório:
 $ ls
 ```
 
-Após localizar o arquivo `.desktop` do aplicativo que deseja ocultar, basta adicionar o parâmetro `NoDisplay=true` ao final do arquivo e, em seguida, salvar e fechar. Porém, para que as mudanças permaneçam mesmo após a atualização do aplicativo, é necessário copiar esses arquivos para a sua pasta local de configurações, `~/.local/share/applications/`. Quando você coloca um arquivo `.desktop` com o mesmo nome nessa pasta, o sistema ignora o arquivo original em `/usr/share/`. Como essa pasta está dentro da sua `Home`, o *pacman* nunca vai mexer nela.
+Após localizar o arquivo `.desktop` do aplicativo que deseja ocultar, basta adicionar o parâmetro `NoDisplay=true` ao final do arquivo e, em seguida, salvar e fechar. Porém, para que as mudanças permaneçam mesmo após a atualização do aplicativo, é necessário copiar esses arquivos para a sua pasta local de configurações, `~/.local/share/applications/`. Quando você coloca um arquivo `.desktop` com o mesmo nome nessa pasta, o sistema ignora o arquivo original em `/usr/share/`. Como essa pasta está dentro da sua `Home`, o _pacman_ nunca vai mexer nela.
 
 Em geral, estes são os aplicativos que costumo ocultar:
 
@@ -34,6 +34,7 @@ xdvi.desktop
 Em vez de copiar e editar um por um manualmente, você pode usar este comando no terminal para automatizar o processo para todos os itens da sua lista (**Cole o comando completo no terminal**):
 
 ::: code-group
+
 ```bash
 $ mkdir -p ~/.local/share/applications/
 
@@ -77,10 +78,9 @@ for app in $apps
   end
 end
 ```
-:::
 
 :::tip NOTA
-Caso utilize o `fish` como *shell* padrão, use a versão correspondente do código.
+Caso utilize o `fish` como _shell_ padrão, use a versão correspondente do código.
 :::
 
 ## Instalação do tema adw-gtk3
@@ -101,7 +101,7 @@ Após isso, basta selecionar o tema através do aplicativo **Ajustes**.
 
 ## Customização do terminal
 
-Para personalizar o terminal no Arch Linux, serão utilizados três pacotes. O primeiro é o `fish`, um *shell* voltado à interatividade que oferece, de forma nativa, recursos como sugestões automáticas de comandos e destaque de sintaxe. O segundo é o `starship`, responsável por fornecer um *prompt* minimalista e exibir informações contextuais, como o diretório atual e o estado de repositórios *Git*. Por fim, o `eza`, uma alternativa moderna ao comando `ls`, que adiciona cores de acordo com o tipo de arquivo e permite uma visualização hierárquica organizada em forma de árvore.
+Para personalizar o terminal no Arch Linux, serão utilizados três pacotes. O primeiro é o `fish`, um _shell_ voltado à interatividade que oferece, de forma nativa, recursos como sugestões automáticas de comandos e destaque de sintaxe. O segundo é o `starship`, responsável por fornecer um _prompt_ minimalista e exibir informações contextuais, como o diretório atual e o estado de repositórios _Git_. Por fim, o `eza`, uma alternativa moderna ao comando `ls`, que adiciona cores de acordo com o tipo de arquivo e permite uma visualização hierárquica organizada em forma de árvore.
 
 Instalação dos pacotes:
 
@@ -111,15 +111,15 @@ $ sudo pacman -S fish starship eza ttf-hack-nerd
 
 Incluí o pacote `ttf-hack-nerd`, necessário para a exibição correta dos ícones. Após a instalação dos pacotes, acesse as configurações do terminal e escolha a fonte **Hack Nerd Font Mono** como padrão.
 
-Torne o `fish` o seu *shell* padrão:
+Torne o `fish` o seu _shell_ padrão:
 
 ```bash
 $ chsh -s /usr/bin/fish
 ```
 
-Para que esse comando tenha efeito, é necessário encerrar a sessão (*log out*) e entrar novamente, mas isso pode ser feito após concluir todo o processo de customização.
+Para que esse comando tenha efeito, é necessário encerrar a sessão (_log out_) e entrar novamente, mas isso pode ser feito após concluir todo o processo de customização.
 
-Para configuração do *fish*, crie o diretório:
+Para configuração do _fish_, crie o diretório:
 
 ```bash
 $ mkdir -p ~/.config/fish
@@ -345,9 +345,8 @@ vimcmd_visual_symbol = '[❮](bold fg:color_yellow)'
 
 Depois de salvar e fechar o arquivo, reinicie a seção.
 
-::: tip DICA BÔNUS 
-Se você utiliza pacotes *Flatpak* e do AUR por meio do gerenciador de pacotes `yay`, além de ter o `fish` configurado como *shell* padrão, pode criar um atalho — como `up`, por exemplo — para atualizar todos os pacotes do sistema com um único comando. Para isso, basta copiar o comando abaixo, colá-lo no terminal e executá-lo:
-
+::: tip DICA BÔNUS
+Se você utiliza pacotes _Flatpak_ e do AUR por meio do gerenciador de pacotes `yay`, além de ter o `fish` configurado como _shell_ padrão, pode criar um atalho — como `up`, por exemplo — para atualizar todos os pacotes do sistema com um único comando. Para isso, basta copiar o comando abaixo, colá-lo no terminal e executá-lo:
 
 ```bash
 $ echo 'function up
@@ -360,16 +359,18 @@ $ echo 'function up
   yay -Syu
 end' > ~/.config/fish/functions/up.fish
 ```
-:::
-## Trocando o *Gnome-Console* pelo terminal *Ghostty*
 
-O *Ghostty* é um emulador de terminal excelente, escrito em *Zig*, incrivelmente rápido e com renderização via GPU. Para instalá-lo:
+:::
+
+## Trocando o _Gnome-Console_ pelo terminal _Ghostty_
+
+O _Ghostty_ é um emulador de terminal excelente, escrito em _Zig_, incrivelmente rápido e com renderização via GPU. Para instalá-lo:
 
 ```bash
 $ sudo pacman -S ghostty ghostty-nautilus ttf-hack-nerd ttf-jetbrains-mono-nerd
 ```
 
-O pacote `ghostty-nautilus` integra o *Ghostty* ao gerenciador de arquivos do GNOME, o *Nautilus*, permitindo abri-lo diretamente a partir do explorador de arquivos. Além disso, a instalação inclui o pacote `ttf-hack-nerd`, que fornece a fonte **Hack Nerd Font**, recomendada para uma melhor experiência de uso no *Ghostty*, especialmente pela compatibilidade com ícones utilizados pelo *prompt* e por outras ferramentas do terminal.
+O pacote `ghostty-nautilus` integra o _Ghostty_ ao gerenciador de arquivos do GNOME, o _Nautilus_, permitindo abri-lo diretamente a partir do explorador de arquivos. Além disso, a instalação inclui os pacotes `ttf-hack-nerd` e `ttf-jetbrains-mono-nerd`, recomendados devido a compatibilidade com ícones utilizados pelo _prompt_ e por outras ferramentas de terminal.
 
 Após a instalação, podemos remover o `gnome-console`:
 
@@ -377,12 +378,17 @@ Após a instalação, podemos remover o `gnome-console`:
 $ sudo pacman -R gnome-console
 ```
 
-Diferente de outros emuladores de terminal, o *Ghostty* não possui uma interface de configurações embutida. Suas configurações são realizadas em um arquivo de texto separado, `~/.config/ghostty/config.ghostty`. Para acessá-lo:
-
+Diferente de outros emuladores de terminal, o _Ghostty_ não possui uma interface de configurações embutida. Suas configurações são realizadas em um arquivo de texto separado, `~/.config/ghostty/config.ghostty`. Para acessá-lo:
 
 ```bash
 $ nano ~/.config/ghostty/config.ghostty
 ```
+
+::: tip NOTA
+
+O arquivo de configuração `config.ghostty` é criado automaticamente na primeira execução do _Ghostty_. Portanto, é necessário abrir o programa pelo menos uma vez antes de editá-lo.
+
+:::
 
 Adicione o seguinte conteúdo:
 
@@ -390,14 +396,16 @@ Adicione o seguinte conteúdo:
 # ~/.config/ghostty/config.ghostty
 
 # --- Fonte ---
+# (Ex.: "Hack Nerd Font Mono", "JetBrainsMono Nerd Font", etc.)
 font-family = "Hack Nerd Font Mono"
 font-size = 12
 
 # --- Tema e Aparência ---
-theme = Adwaita Dark
+# (Ex.: Gnome Adwaita, Gruvbox, etc.)
+#theme =
 
 # --- Comportamento ---
-# Garante que o terminal inicie diretamente no seu shell
+# Garante que o ghostty inicie no shell de sua preferência (Ex.: bash, fish, etc.)
 shell-integration = fish
 
 # Copiar automaticamente ao selecionar o texto
@@ -409,9 +417,14 @@ copy-on-select = clipboard
 window-width = 150
 window-height = 50
 
-# --- Rolagem e Mouse ---
+# --- Velocidade do scroll ---
 # O valor padrão é 1. Reduzir esse valor (ex: 0.5 ou 0.3) fará com que o
 # touchpad ou o scroll do mouse desçam menos linhas por movimento.
 #mouse-scroll-multiplier = 0.5
 ```
 
+::: tip NOTA
+Para visualizar a lista de temas compatíveis com o _Ghostty_, utilize o comando `ghostty +list-themes`. Ao navegar pela lista com as teclas de direção, o tema selecionado é aplicado temporariamente, permitindo uma prévia de sua aparência no terminal.
+
+Para aplicar um tema de forma permanente, é necessário definir seu nome em `theme =` no arquivo de configuração do _Ghostty_.
+:::
