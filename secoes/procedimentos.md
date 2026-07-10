@@ -14,9 +14,9 @@ Feito isso, navegue pelo arquivo até encontrar a linha `#ParallelDownloads = 5`
 
 Opcionalmente, podemos acrescentar a linha `ILoveCandy` ao arquivo. Está linha irá modificar a aparência das barras de progresso no terminal para algo semelhante ao game **Pacman**. Esta linha pode ser acrescentada logo após o parâmetro `ParallelDownloads = 5`. Essa modificação é valida apenas para o gerenciador de pacotes `pacman`.
 
-## Instalação de um gestor de *Firmware*
+## Instalação de um gestor de _Firmware_
 
-Para a gestão/atualização de *firmware* da sua maquina, existe um pacote chamado `fwupd`. Quando instalado, este pacote se integra automaticamente a Gnome Software, permitindo que a mesma procure também por atualizações de *firmware*, além das atualizações convencionais de programas. Para instalação do `fwupd`, basta rodar:
+Para a gestão/atualização de _firmware_ da sua maquina, existe um pacote chamado `fwupd`. Quando instalado, este pacote se integra automaticamente a Gnome Software, permitindo que a mesma procure também por atualizações de _firmware_, além das atualizações convencionais de programas. Para instalação do `fwupd`, basta rodar:
 
 ```bash
 $ sudo pacman -S fwupd
@@ -30,9 +30,9 @@ Por padrão o Arch Linux não traz suporte para sistema de arquivos do tipo NTFS
 $ sudo pacman -S ntfs-3g
 ```
 
-## Ativação do serviço de *Bluetooth*
+## Ativação do serviço de _Bluetooth_
 
-Nas versões atuais do *Archinstall*, é oferecida ao usuário a opção de habilitar o serviço de *bluetooth* durante a instalação do sistema. Caso a ativação dessa opção seja esquecida, após a instalação basta executar os seguintes comandos para ativar o serviço:
+Nas versões atuais do _Archinstall_, é oferecida ao usuário a opção de habilitar o serviço de _bluetooth_ durante a instalação do sistema. Caso a ativação dessa opção seja esquecida, após a instalação basta executar os seguintes comandos para ativar o serviço:
 
 ```bash
 $ sudo systemctl enable --now bluetooth.service
@@ -52,7 +52,7 @@ Para usar essa ferramenta, basta executar:
 $ sudo paccache -r
 ```
 
-Por padrão, o `paccache` remove todos os pacotes do cache que não estão instalados no sistema e mantem até duas versões diferentes do *Kernel*.
+Por padrão, o `paccache` remove todos os pacotes do cache que não estão instalados no sistema e mantem até duas versões diferentes do _Kernel_.
 
 Para não ter que se preocupar em ter que rodar esse comando eventualmente no futuro, você pode ativar um serviço do `systemd`:
 
@@ -60,15 +60,15 @@ Para não ter que se preocupar em ter que rodar esse comando eventualmente no fu
 $ sudo systemctl enable --now paccache.timer
 ```
 
-Isso vai rodar a limpeza uma vez por semana de forma silenciosa. Para ter certeza de que o comando está configurado para rodar semanalmente, você pode usar o comando de listagem de *timers*:
+Isso vai rodar a limpeza uma vez por semana de forma silenciosa. Para ter certeza de que o comando está configurado para rodar semanalmente, você pode usar o comando de listagem de _timers_:
 
 ```bash
 $ systemctl list-timers paccache.timer
 ```
 
-## Instalação e ativação do *firewall*
+## Instalação e ativação do _firewall_
 
-Para realizar a instalação de um *firewall*, vamos instalar o pacote `ufw`:
+Para realizar a instalação de um _firewall_, vamos instalar o pacote `ufw`:
 
 ```bash
 $ sudo pacman -S ufw
@@ -82,11 +82,11 @@ $ sudo systemctl enable --now ufw
 
 Além de iniciar o serviço imediatamente, esse comando também o habilita para ser executado automaticamente durante a inicialização do sistema.
 
-## Alteração do tamanho da memória *swap*
+## Alteração do tamanho da memória _swap_
 
-O *script* de instalação do *Archinstall* configura, por padrão, um valor de memória *swap* em torno de 4 GB. Esse valor pode ser considerado pequeno para computadores com 8 GB ou mais de RAM, especialmente quando o usuário costuma utilizar o modo de suspensão, no qual o estado atual da sessão é salvo na memória *swap*.
+O _script_ de instalação do _Archinstall_ configura, por padrão, um valor de memória _swap_ em torno de 4 GB. Esse valor pode ser considerado pequeno para computadores com 8 GB ou mais de RAM, especialmente quando o usuário costuma utilizar o modo de suspensão, no qual o estado atual da sessão é salvo na memória _swap_.
 
-Por esse motivo, é importante definir um valor adequado de acordo com cada caso. Pessoalmente, costumo adotar uma quantidade de *swap* equivalente à memória RAM do dispositivo. Ou seja, se o computador possui 8 GB de RAM, defino 8 GB de *swap*; se possui 16 GB de RAM, defino também 16 GB de *swap*.
+Por esse motivo, é importante definir um valor adequado de acordo com cada caso. Pessoalmente, costumo adotar uma quantidade de _swap_ equivalente à memória RAM do dispositivo. Ou seja, se o computador possui 8 GB de RAM, defino 8 GB de _swap_; se possui 16 GB de RAM, defino também 16 GB de _swap_.
 
 Para ajustarmos esse valor, devemos editar o arquivo de configuração do `zram-generator`:
 
@@ -102,11 +102,11 @@ zram-size = 8192
 compression-algorithm = zstd
 ```
 
-Neste exemplo, configurei o equivalente a aproximadamente 8 GB de *swap*. No entanto, a quantidade ideal fica a critério do usuário.
+Neste exemplo, configurei o equivalente a aproximadamente 8 GB de _swap_. No entanto, a quantidade ideal fica a critério do usuário.
 
-## Instalação de *codecs* multimídia
+## Instalação de _codecs_ multimídia
 
-Para que não haja possíveis incompatibilidades com formatos de mídias específicos, o comando a seguir instala todos os *codecs* necessários para quaisquer tipos de arquivos de mídia:
+Para que não haja possíveis incompatibilidades com formatos de mídias específicos, o comando a seguir instala todos os _codecs_ necessários para quaisquer tipos de arquivos de mídia:
 
 ```bash
 $ sudo pacman -S ffmpeg gst-plugins-ugly gst-plugins-good gst-plugins-base gst-plugins-bad gst-libav gstreamer
@@ -125,25 +125,27 @@ Para ativá-lo e evitar conflitos com o `systemd-rfkill`:
 ```bash
 $ sudo systemctl enable tlp.service
 ```
+
 ```bash
 $ sudo systemctl mask systemd-rfkill.service systemd-rfkill.socket
 ```
+
 Após a reinicialização o modulo já estará funcionando.
 
-## Adicionar suporte a *emojis*
+## Adicionar suporte a _emojis_
 
-A fonte padrão do Arch Linux não possui suporte para *emojis*, acarretando em fontes genéricas ou transfiguradas em determinadas ocasiões. O comando a seguir adiciona um conjunto de *emojis* ao sistema:
+A fonte padrão do Arch Linux não possui suporte para _emojis_, acarretando em fontes genéricas ou transfiguradas em determinadas ocasiões. O comando a seguir adiciona um conjunto de _emojis_ ao sistema:
 
 ```bash
 $ sudo pacman -S noto-fonts noto-fonts-emoji ttf-liberation ttf-droid adobe-source-sans-fonts ttf-dejavu
 ```
 
-## Adicionar suporte a geração de miniaturas de vídeos no *nautilus*
+## Adicionar suporte a geração de miniaturas de vídeos no _nautilus_
 
-Após a mudança de *player* de vídeo padrão que o Gnome sofreu, as miniaturas dos vídeos no *nautilus* são geradas agora pelo pacote `ffmpegthumbnailer`. Esse pacote dever ser instalado junto com o `gst-plugin-ffmpeg`: 
+Após a mudança de _player_ de vídeo padrão que o Gnome sofreu, as miniaturas dos vídeos no _nautilus_ são geradas agora pelo pacote `ffmpegthumbnailer`. Esse pacote dever ser instalado junto com o `gst-plugin-ffmpeg`:
 
 ```bash
-$ sudo pacman -S ffmpegthumbnailer gst-plugin-ffmpeg
+$ sudo pacman -S ffmpegthumbnailer
 ```
 
 Após isso é necessário apagar o cache de miniaturas e gerá-las novamente:
@@ -152,21 +154,24 @@ Após isso é necessário apagar o cache de miniaturas e gerá-las novamente:
 $ rm -rf ~/.cache/thumbnails/*
 ```
 
-Feito isso, abra o *nautilus* novamente e navegue até a pasta de vídeos e verifique o resultado.
+Feito isso, abra o _nautilus_ novamente e navegue até a pasta de vídeos e verifique o resultado.
 
 ## Adicionar suporte ao AUR (opcional)
 
-O *Arch User Repository* (AUR) é onde a comunidade compartilha pacotes que não estão nos repositórios oficiais. Para instalar programas do AUR é necessário um *helper*. O `yay` é um dos mais populares, e para instalá-lo basta:
+O _Arch User Repository_ (AUR) é onde a comunidade compartilha pacotes que não estão nos repositórios oficiais. Para instalar programas do AUR é necessário um _helper_. O `yay` é um dos mais populares, e para instalá-lo basta:
 
 ```bash
 $ sudo pacman -S --needed git base-devel
 ```
+
 ```bash
 $ git clone https://aur.archlinux.org/yay.git
 ```
+
 ```bash
 $ cd yay
 ```
+
 ```bash
 $ makepkg -si
 ```
@@ -184,4 +189,3 @@ A seguir deixarei um comando de instalação de alguns pacotes que não são obr
 ```bash
 $ sudo pacman -S unrar p7zip fastfetch exfatprogs dosfstools mediainfo rsync
 ```
-
