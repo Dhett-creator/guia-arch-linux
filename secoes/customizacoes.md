@@ -401,7 +401,7 @@ font-family = "Hack Nerd Font Mono"
 font-size = 12
 
 # --- Tema e Aparência ---
-# (Ex.: Gnome Adwaita, Gruvbox, etc.)
+# (Ex.: Gnome Adwaita, Gruvbox Material, etc.)
 #theme =
 
 # --- Comportamento ---
