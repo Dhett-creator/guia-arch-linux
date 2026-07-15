@@ -19,7 +19,7 @@ Algumas das opções mais utilizadas são:
 - `--partial`: mantém arquivos parcialmente transferidos caso a operação seja interrompida, permitindo retomá-la sem reiniciar a cópia do zero.
 - `-P`: equivale à combinação de `--partial` e `--progress`, sendo uma opção bastante utilizada para transferências de arquivos grandes.
 - `--info=progress2`: exibe o progresso global da transferência, mostrando a quantidade total de dados já copiados, a velocidade de transferência, o tempo decorrido e a estimativa de conclusão.
-
+- `--no-i-r`: obriga que o `rsync` escaneie toda a árvore de diretórios antes de começar a cópia, tonando a estimativa da porcentagem e do tempo de transferência mais precisos.
 
 ## Copiar arquivos entre diretórios locais
 
@@ -30,12 +30,3 @@ $ rsync -avh --partiall --info=progress2 /origem/ /destino/
 ```
 
 O caractere `/` ao final do diretório de origem indica que apenas o conteúdo será copiado. Se ele for omitido, o diretório de origem também será criado dentro do destino.
-
-<!-- ## Manter dois diretórios sincronizados -->
-
-<!-- Se desejar que o diretório de destino seja uma cópia exata da origem, removendo arquivos que não existem mais na origem, utilize a opção `--delete`: -->
-
-<!-- ```bash -->
-<!-- $ rsync -avh --delete --progress /origem/ /destino/ -->
-<!-- ``` -->
-
