@@ -61,8 +61,7 @@ execute.throw = sh, -c, (cat,\
 #############################################################################
 
 ## Porta fixa para conexões de entrada (evita problemas com firewall)
-network.port_range.set = 50000-50000
-network.port_random.set = no
+network.port_range.set = 50000
 
 #############################################################################
 ## 4. DHT, PEX E TRACKERS UDP (ATIVADOS PARA REDE PÚBLICA)
@@ -103,7 +102,7 @@ throttle.max_peers.seed.set = 80
 trackers.numwant.set = 80
 
 ## Configuração de criptografia de protocolo
-protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
+protocol.encryption.set = prefer
 
 #############################################################################
 ## 6. LIMITES DE RECURSOS DO SISTEMA
@@ -558,9 +557,10 @@ Escolha um nome de usuário e senha para proteger o acesso à interface. Em segu
 
 ## _Script_ para apagar arquivos _.torrent_ legados
 
-Ao excluir vários arquivos simultaneamente diretamente pela interface do Flood, é comum que nem todos os arquivos `.torrent` correspondentes sejam removidos das pastas monitoradas. Como consequência, ao reiniciar o sistema, o rTorrent tenta baixar novamente esses _torrents_, já que os arquivos `.torrent` ainda permanecem nas pastas monitoradas.
 
-Para contornar esse problema, podemos criar um _script_ que realize verificações periódicas, comparando os _torrents_ atualmente em `seed` no rTorrent com os arquivos `.torrent` existentes nas pastas monitoradas.
+Ao excluir vários *torrents* simultaneamente pela interface do Flood, é comum que nem todos os arquivos `.torrent` correspondentes sejam removidos das pastas monitoradas. Como resultado, esses arquivos permanecem disponíveis para o rTorrent que, ao ser reiniciado, interpreta sua presença como novos *torrents* a serem adicionados à sessão, iniciando novamente seus respectivos downloads.
+
+Para evitar esse comportamento, podemos criar um *script* que execute verificações periódicas, comparando os *torrents* atualmente presentes na sessão do rTorrent com os arquivos `.torrent` existentes nas pastas monitoradas. Caso sejam encontrados arquivos `.torrent` que não possuam uma sessão correspondente no rTorrent, eles poderão ser removidos automaticamente.
 
 Primeiro, crie o arquivo do _script_:
 
