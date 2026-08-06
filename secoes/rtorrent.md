@@ -557,7 +557,6 @@ Escolha um nome de usuário e senha para proteger o acesso à interface. Em segu
 
 ## _Script_ para apagar arquivos _.torrent_ legados
 
-
 Ao excluir vários *torrents* simultaneamente pela interface do Flood, é comum que nem todos os arquivos `.torrent` correspondentes sejam removidos das pastas monitoradas. Como resultado, esses arquivos permanecem disponíveis para o rTorrent que, ao ser reiniciado, interpreta sua presença como novos *torrents* a serem adicionados à sessão, iniciando novamente seus respectivos downloads.
 
 Para evitar esse comportamento, podemos criar um *script* que execute verificações periódicas, comparando os *torrents* atualmente presentes na sessão do rTorrent com os arquivos `.torrent` existentes nas pastas monitoradas. Caso sejam encontrados arquivos `.torrent` que não possuam uma sessão correspondente no rTorrent, eles poderão ser removidos automaticamente.
