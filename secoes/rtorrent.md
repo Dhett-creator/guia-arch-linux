@@ -18,7 +18,7 @@ $ nano ~/.rtorrent.rc
 
 Dentro desse arquivo, cole o seguinte conteúdo:
 
-```bash:line-numbers {11,34-36,118,124,171-173,177-179,183-185}
+```bash:line-numbers {11,34-36,122,128,174-177,180-183,186-189}
 #############################################################################
 # Uma configuração mínima do rTorrent que fornece os recursos básicos
 # que você deseja ter além dos padrões integrados.
@@ -192,19 +192,19 @@ method.insert = d.session_file, simple, "cat=(session.path), (d.hash), .torrent"
 #############################################################################
 
 ## Animes
-schedule = watch_animes, 10, 10, ((load.start_verbose, \
+schedule = watch_pasta1, 10, 10, ((load.start_verbose, \
     (cat,(cfg.watch),"Pasta1-.torrents/*.torrent"), \
     d.directory.set=/home/USER/Pasta1/, \
     d.custom1.set=Pasta1))
 
 ## Séries
-schedule = watch_series, 10, 10, ((load.start_verbose, \
+schedule = watch_pasta2, 10, 10, ((load.start_verbose, \
     (cat,(cfg.watch),"Pasta2-.torrents/*.torrent"), \
     d.directory.set=/home/USER/Pasta2/, \
     d.custom1.set=Pasta2))
 
 ## Filmes
-schedule = watch_filmes, 10, 10, ((load.start_verbose, \
+schedule = watch_pasta3, 10, 10, ((load.start_verbose, \
     (cat,(cfg.watch),"Pasta3-.torrents/*.torrent"), \
     d.directory.set=/home/USER/Pasta3/, \
     d.custom1.set=Pasta3))
