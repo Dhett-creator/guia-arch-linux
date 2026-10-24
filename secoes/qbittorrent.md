@@ -4,19 +4,19 @@ Por motivos pessoais, costumo utilizar a versão do qBittorrent sem interface gr
 
 ## Instalação e configuração 
 
-Para instalá-la:
+Para instalar o `qbitorrent-nox`:
 
 ```bash
 $ sudo pacman -S qbittorrent-nox
 ```
 
-Após a instalação é importante que o qBittorrent-nox seja iniciado pela primeira vez via terminal para ser definido um novo usuário e uma nova senha nas configurações do aplicativo. Esse comando inicia o qBittorrent-nox pelo terminal:
+Após a instalação, é necessário iniciar o `qbittorrent-nox` pelo terminal pela primeira vez para definir o nome de usuário e a senha que serão utilizados para acessar a interface Web do aplicativo. Para isso, execute o comando abaixo:
 
 ```bash
 $ qbittorrent-nox
 ```
 
-Realizadas as configurações, feche o aplicativo utilizando apenas o atalho `Ctrl + c` e siga os passos abaixo para criar um serviço que permita ao qBittorrent-nox iniciar com o sistema.
+Realizadas as configurações, feche o aplicativo utilizando apenas o atalho `Ctrl + c` no terminal e siga os passos abaixo para criar um serviço que permita ao `qbittorrent-nox` iniciar com o sistema.
 
 Primeiro, crie o arquivo de serviço:
 
@@ -60,12 +60,13 @@ Por último é necessário ativar o serviço:
 
 ```bash
 $ sudo systemctl daemon-reload
+```
+```bash
 $ sudo systemctl enable --now qbittorrent-nox.service
 ```
-
 ## Automação de downloads
 
-O qBittorrent permite o monitoramento de pastas para a adição automática de arquivos torrent. No entanto, essa funcionalidade limita o monitoramento a apenas uma única pasta. Uma forma de contornar essa limitação é por meio do uso de scripts, que podem ser configurados para monitorar múltiplas pastas simultaneamente.
+O qBittorrent permite o monitoramento de pastas para a adição automática de arquivos `.torrent`. No entanto, essa funcionalidade limita o monitoramento a apenas uma única pasta. Uma forma de contornar essa limitação é por meio de `scripts`, que podem ser configurados para monitorar múltiplas pastas simultaneamente.
 
 Neste exemplo, serão monitoradas três pastas distintas. Para cada uma delas, será definido um diretório de salvamento padrão, diferente para cada categoria de conteúdo.
 
@@ -75,23 +76,25 @@ Primeiramente, é necessário instalar o pacote `inotify-tools`, responsável po
 $ sudo pacman -S inotify-tools curl
 ```
 
-Vamos supor que queremos realizar o monitoramento das pastas:
+Vamos supor que queremos realizar o monitoramento das seguintes pastas:
 
 ```bash
-/mnt/md0/Torrents/Pasta1-.torrents
-/mnt/md0/Torrents/Pasta2-.torrents
-/mnt/md0/Torrents/Pasta3-.torrents
+/mnt/sdb1/Torrents/Pasta1-.torrents
+/mnt/sdb1/Torrents/Pasta2-.torrents
+/mnt/sdb1/Torrents/Pasta3-.torrents
 ```
 
-Essas pastas devem ser criadas antes de prosseguir. O próximo passo consiste em criar um script responsável por monitorar a adição de arquivos `.torrent` nessas pasta e definir automaticamente o diretório de salvamento correspondente.
+::: tip NOTA
+Essas pastas devem ser criadas antes de prosseguirmos com os passos adiante.
+:::
 
-Criação do Script:
+Agora, vamos criar o `script` responsável por fazer o monitoramento dessas pastas:
 
 ```bash
 $ sudo nano /usr/local/bin/qbit-scan.sh
 ```
 
-Conteúdo do arquivo:
+Adicione o seguinte conteúdo ao arquivo:
 
 ```bash:line-numbers {7-9,17,20,21}
 #!/bin/bash
@@ -100,9 +103,9 @@ Conteúdo do arquivo:
 # Define a relação entre a pasta monitorada,
 # a etiqueta (tag) e a pasta de destino
 declare -A MONITOR
-MONITOR["Pasta1"]="Pasta1:/mnt/md0/Pasta1"
-MONITOR["Pasta2"]="Pasta2:/mnt/md0/Pasta2"
-MONITOR["Pasta3"]="Pasta3:/mnt/md0/Pasta3"
+MONITOR["Pasta1"]="Pasta1:/mnt/sdb1/Pasta1"
+MONITOR["Pasta2"]="Pasta2:/mnt/sdb1/Pasta2"
+MONITOR["Pasta3"]="Pasta3:/mnt/sdb1/Pasta3"
 
 # --- OPÇÃO DE PULAR VERIFICAÇÃO ---
 # Se descomentada, o qBittorrent não checará
@@ -110,7 +113,7 @@ MONITOR["Pasta3"]="Pasta3:/mnt/md0/Pasta3"
 #SKIP_CHECK="-F skip_checking=true"
 
 # --- VARIÁVEIS DE CONEXÃO E AMBIENTE ---
-BASE_WATCH="/mnt/md0/Torrents"
+BASE_WATCH="/mnt/sdb1/Torrents"
 QBIT_HOST="http://localhost:8080"
 # Coloque o usuário e a senha do qBittorrent
 USERNAME="SEU_USUÁRIO"
@@ -172,19 +175,19 @@ while read path action file; do
   fi
 done
 ```
-Conceda permissão de execução para o script:
+Conceda permissão de execução para o `script`:
 
 ```bash
 $ sudo chmod +x /usr/local/bin/qbit-scan.sh
 ```
 
-Agora, crie o serviço:
+Agora, crie o serviço responsável por executar o `script` na inicialização do sistema:
 
 ```bash
 $ sudo nano /etc/systemd/system/qbit-scan.service
 ```
 
-Cole o seguinte conteúdo:
+Adicione o seguinte conteúdo:
 
 ```bash:line-numbers {8,9}
 [Unit]
@@ -207,10 +210,12 @@ Ative o serviço:
 
 ```bash
 $ sudo systemctl daemon-reload
+```
+```bash
 $ sudo systemctl enable --now qbit-scan.service
 ```
 
-Para checar o status do serviço:
+Para checar o *status* do serviço:
 
 ```bash
 $ sudo systemctl status qbit-scan.service
@@ -219,16 +224,16 @@ $ sudo systemctl status qbit-scan.service
 A partir desse momento, todos os arquivos `.torrent` adicionados às pastas `Pasta1-.torrents`, `Pasta2-.torrents` e `Pasta3-.torrents` serão automaticamente importados pelo qBittorrent e terão seus downloads iniciados nos diretórios `Pasta1`, `Pasta2` e `Pasta3`, respectivamente.
 
 ::: warning AVISO
-Com relação ao script que acabamos de criar, observe que no início há a seguinte linha comentada: `SKIP_CHECK="-F skip_checking=true"`. Essa linha é responsável por instruir o qBittorrent a pular a verificação de hash, sendo especialmente útil em situações em que há inúmeros arquivos já baixados e armazenados em disco e se deseja apenas retomar a atividade de seed. Assim, caso deseje utilizar essa funcionalidade, basta descomentar essa linha. 
+Com relação ao script que acabamos de criar, observe que no início há a seguinte linha comentada: `SKIP_CHECK="-F skip_checking=true"`. Essa linha é responsável por instruir o qBittorrent a pular a verificação de *hash*, sendo especialmente útil em situações em que há inúmeros arquivos já baixados e armazenados em disco e se deseja apenas retomar a atividade de *seed*. Assim, caso deseje utilizar essa funcionalidade, basta descomentar essa linha. 
 
-Após o uso, entretanto, é fundamental comentá-la novamente, pois, caso permaneça descomentada, novos arquivos poderão passar a ser exibidos com o status `Arquivos ausentes`. Portanto, após a utilização dessa funcionalidade, comente novamente a linha e reinicie o serviço do script: `sudo systemctl restart qbit-scan.service`
+Após o uso, entretanto, é fundamental comentá-la novamente, pois, caso permaneça descomentada, novos arquivos poderão passar a ser exibidos com o status `Arquivos ausentes`. Portanto, após a utilização dessa funcionalidade, comente novamente a linha e reinicie o serviço do *script*: `sudo systemctl restart qbit-scan.service`
 :::
 
 ## Sistema de notificações
 
-Por padrão, o qBittorrent-nox não emite notificações quando um download é finalizado. Para contornar essa limitação, podemos criar um script responsável por exibir uma notificação na área de trabalho sempre que um download for concluído. Aproveitando essa funcionalidade, também será criado um segundo script para notificar sempre que um novo torrent for adicionado.
+Por padrão, o `qbittorrent-nox` não emite notificações quando um *download* é finalizado. Para contornar essa limitação, podemos criar um *script* responsável por exibir uma notificação na área de trabalho sempre que um *download* for concluído. Aproveitando essa funcionalidade, também será criado um segundo *script* para notificar sempre que um novo *torrent* for adicionado.
 
-Embora o qBittorrent-nox não disponibilize uma opção nativa de notificações, ele oferece dois campos que permitem a execução de scripts externos tanto após a adição de torrents quanto após a conclusão dos downloads.
+Embora o `qbittorrent-nox` não disponibilize uma opção nativa de notificações, ele oferece dois campos que permitem a execução de *scripts* externos tanto após a adição de *torrents* quanto após a conclusão dos *downloads*.
 
 Primeiramente, será criado o script responsável pela notificação de "**Download finalizado**":
 
@@ -292,20 +297,22 @@ export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
   5000 > /dev/null
 ```
 
-Após a criação dos arquivos, conceda permissão de execução aos scripts utilizando o comando:
+Após a criação dos arquivos, conceda permissão de execução aos *scripts* utilizando o comando:
 
 ```bash
 $ sudo chmod +x /usr/local/bin/qbit-*.sh
 ```
 
-Os scripts podem ser testados manualmente com os comandos:
+Os *scripts* podem ser testados manualmente com os comandos:
 
 ```bash
 $ /usr/local/bin/qbit-added.sh "Teste 1"
+```
+```bash
 $ /usr/local/bin/qbit-downloaded.sh "Teste 2"
 ```
 
-Se as notificações forem exibidas corretamente, abra a interface web do qBittorrent e navegue até `Opções > Downloads`. Nessa janela, role até o final, onde se encontra a seção `Executar programa externo`, e marque as opções `Executar ao adicionar o torrent` e `Executar ao concluir o torrent`.
+Se as notificações forem exibidas corretamente, abra a *interface web* do qBittorrent e navegue até `Opções > Downloads`. Nessa janela, role até o final, onde se encontra a seção `Executar programa externo`, e marque as opções `Executar ao adicionar o torrent` e `Executar ao concluir o torrent`.
 
 No campo logo abaixo da opção `Executar ao adicionar o torrent`, insira:
 
@@ -319,21 +326,21 @@ Já no campo abaixo de `Executar ao concluir o torrent`, adicione:
 /usr/local/bin/qbit-downloaded.sh "%N"
 ```
 
-Por fim, salve as alterações e teste a configuração adicionando arquivos torrent às pastas monitoradas. As notificações deverão ser exibidas conforme os eventos configurados.
+Por fim, salve as alterações e teste a configuração adicionando arquivos *torrent* às pastas monitoradas. As notificações deverão ser exibidas conforme os eventos configurados.
 
-## Exclusão automática de arquivos .torrent
+## Exclusão automática de arquivos *.torrent*
 
-Quando se possui múltiplos diretórios configurados para se monitorar a adição de arquivos `.torrent`, torna-se conveniente dispor de um script responsável por remover automaticamente aqueles arquivos `.torrent` que já não estão mais presentes no cliente torrent.
+Quando se possui múltiplos diretórios configurados para se monitorar a adição de arquivos `.torrent`, torna-se conveniente dispor de um *script* responsável por remover automaticamente aqueles arquivos `.torrent` que já não estão mais presentes no cliente *torrent*.
 
-A proposta consiste em realizar uma varredura periódica nos torrents atualmente carregados no qBittorrent e compará-los com os arquivos .torrent existentes nos diretórios monitorados. Caso um arquivo `.torrent` não corresponda a nenhum torrent ativo no cliente, ele será automaticamente movido para a lixeira.
+A proposta consiste em realizar uma varredura periódica nos *torrents* atualmente carregados no qBittorrent e compará-los com os arquivos `.torrent` existentes nos diretórios monitorados. Caso um arquivo `.torrent` não corresponda a nenhum *torrent* ativo no cliente, ele será automaticamente movido para a lixeira.
 
-Inicialmente, instale os pacotes necessários para o funcionamento do script:
+Inicialmente, instale os pacotes necessários para o funcionamento do *script*:
 
 ```bash
 $ sudo pacman -S transmission-cli trash-cli python-requests
 ```
 
-Desta vez, por conveniência, iremos criar o script em Python:
+Desta vez, por conveniência, iremos criar o *script* em *Python*:
 
 ```bash
 $ sudo nano /usr/local/bin/qbit-clean.py
@@ -457,27 +464,33 @@ Agora que os arquivos já estão prontos, podemos ativar o `qbit-clean.timer`:
 
 ```bash
 $ sudo systemctl daemon-reload
+```
+
+```bash
 $ sudo systemctl enable --now qbit-clean.timer
 ```
 
-O script pode ser testado imediatamente com:
+O *script* pode ser testado imediatamente com:
 
 ```bash
 $ /usr/local/bin/qbit-clean.py
 ```
 
-## Criando uma dependência entre o qBittorrent e o disco
+## Ordem de desmontagem no *systemd*
 
-No meu caso, ao desligar o sistema, o `systemd` costuma tentar desmontar o disco que armazena os arquivos do qBittorrent antes de encerrar o próprio serviço. Isso resulta em um erro, pois o disco continua em uso, gerando uma mensagem informando a falha na desmontagem da partição correspondente.
+No meu caso, durante o desligamento do sistema, o `systemd` tenta desmontar a partição que armazena os arquivos do qBittorrent antes de encerrar o próprio serviço. Como a partição ainda está em uso, a desmontagem falha, gerando uma mensagem de erro durante o processo de desligamento.
 
-Embora esse comportamento não cause problemas práticos no uso cotidiano, considerei mais adequado ajustar a ordem de finalização do qBittorrent, de modo a evitar esse aviso e garantir um desligamento mais limpo do sistema.
+Embora esse comportamento não cause problemas práticos no funcionamento do sistema, optei por ajustar a ordem de encerramento dos serviços para evitar esse aviso e garantir um desligamento mais organizado.
 
-A solução adotada foi criar uma dependência explícita entre o serviço do qBittorrent e a partição onde os arquivos baixados estão armazenados. Dessa forma, o sistema passa a desmontar a partição apenas após a finalização completa do serviço do qBittorrent.
+A solução consiste em criar uma dependência explícita entre o serviço do qBittorrent e a partição onde os arquivos são armazenados. Assim, o `systemd` somente desmontará a partição após a finalização completa do serviço, eliminando a mensagem de erro durante o desligamento.
 
 Para isso, vamos criar a seguinte pasta e arquivo de configuração, respectivamente:
 
 ```bash
 $ sudo mkdir -p /etc/systemd/system/qbittorrent.service.d/
+```
+
+```bash
 $ sudo nano /etc/systemd/system/qbittorrent.service.d/override.conf
 ```
 
@@ -485,8 +498,8 @@ Dentro do arquivo, cole o seguinte conteúdo:
 
 ```bash:line-numbers
 [Unit]
-After=mnt-md0.mount
-Requires=mnt-md0.mount
+After=mnt-sdb1.mount
+Requires=mnt-sdb1.mount
 
 [Service]
 # O qBittorrent precisa de um tempo para fechar os arquivos 
@@ -494,8 +507,8 @@ KillSignal=SIGTERM
 TimeoutStopSec=60
 ```
 
-::: tip AVISO
-Note que estou utilizando o disco `md0` como exemplo, mas poderia ser qualquer outro (`sda`, `sdb`, `sdc`, etc.).
+::: tip NOTA
+O identificador `sdb1` foi utilizado apenas como exemplo. No seu caso, substitua-o pelo identificador correspondente à partição que deseja utilizar, como `sda1`, `sdb1`, `sdc1` ou outro, conforme a configuração do seu sistema.
 :::
 
 Para finalizar, recarregue o `daemon`:

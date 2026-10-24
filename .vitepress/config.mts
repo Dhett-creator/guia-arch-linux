@@ -52,6 +52,7 @@ export default defineConfig({
           { text: 'Ajustes e customizações', link: '/secoes/customizacoes' },
           { text: 'Downgrade de pacotes', link: '/secoes/downgrade' },
           { text: 'Formatação de dispositivos removíveis', link: '/secoes/formatacao' },
+          { text: 'Transferência de arquivos via terminal', link: '/secoes/rsync' },
           { text: 'qBittorrent-nox', link: '/secoes/qbittorrent' },
           { text: 'rTorrent', link: '/secoes/rtorrent' },
           { text: 'RAID0', link: '/secoes/raid0' },
