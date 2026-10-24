@@ -18,7 +18,7 @@ $ nano ~/.rtorrent.rc
 
 Dentro desse arquivo, cole o seguinte conteúdo:
 
-```bash:line-numbers {11,34-36,118,124,171-173,177-179,183-185}
+```bash:line-numbers {11,34-36,122,128,174-177,180-183,186-189}
 #############################################################################
 # Uma configuração mínima do rTorrent que fornece os recursos básicos
 # que você deseja ter além dos padrões integrados.
@@ -61,8 +61,7 @@ execute.throw = sh, -c, (cat,\
 #############################################################################
 
 ## Porta fixa para conexões de entrada (evita problemas com firewall)
-network.port_range.set = 50000-50000
-network.port_random.set = no
+network.port_range.set = 50000
 
 #############################################################################
 ## 4. DHT, PEX E TRACKERS UDP (ATIVADOS PARA REDE PÚBLICA)
@@ -103,7 +102,7 @@ throttle.max_peers.seed.set = 80
 trackers.numwant.set = 80
 
 ## Configuração de criptografia de protocolo
-protocol.encryption.set = allow_incoming,try_outgoing,enable_retry
+protocol.encryption.set = prefer
 
 #############################################################################
 ## 6. LIMITES DE RECURSOS DO SISTEMA
@@ -193,19 +192,19 @@ method.insert = d.session_file, simple, "cat=(session.path), (d.hash), .torrent"
 #############################################################################
 
 ## Animes
-schedule = watch_animes, 10, 10, ((load.start_verbose, \
+schedule = watch_pasta1, 10, 10, ((load.start_verbose, \
     (cat,(cfg.watch),"Pasta1-.torrents/*.torrent"), \
     d.directory.set=/home/USER/Pasta1/, \
     d.custom1.set=Pasta1))
 
 ## Séries
-schedule = watch_series, 10, 10, ((load.start_verbose, \
+schedule = watch_pasta2, 10, 10, ((load.start_verbose, \
     (cat,(cfg.watch),"Pasta2-.torrents/*.torrent"), \
     d.directory.set=/home/USER/Pasta2/, \
     d.custom1.set=Pasta2))
 
 ## Filmes
-schedule = watch_filmes, 10, 10, ((load.start_verbose, \
+schedule = watch_pasta3, 10, 10, ((load.start_verbose, \
     (cat,(cfg.watch),"Pasta3-.torrents/*.torrent"), \
     d.directory.set=/home/USER/Pasta3/, \
     d.custom1.set=Pasta3))
@@ -319,7 +318,7 @@ As linhas destacadas requerem adaptação por parte do usuário.
 Essa configuração foi criada e ajustada para a versão 0.16.26 do rTorrent. Ela oferece uma automação básica para a adição e remoção de arquivos, exigindo apenas que o usuário ajuste corretamente os diretórios de criação de pastas e de armazenamento dos arquivos baixados. Foram definidos três diretórios `watch` para o monitoramento de arquivos `.torrent`. Basta que o usuário adicione um ou mais arquivos `.torrent` em qualquer um desses diretórios para que o _download_ seja iniciado automaticamente no diretório correspondente.
 :::
 
-Para verificar rapidamente se a configuração está correta, inicie o rTorrent no terminal:
+Para verificar rapidamente se a configuração está correta, inicie o rTorrent via terminal:
 
 ```bash
 $ rtorrent
@@ -555,9 +554,9 @@ Escolha um nome de usuário e senha para proteger o acesso à interface. Em segu
 
 ## _Script_ para apagar arquivos _.torrent_ legados
 
-Ao excluir vários arquivos simultaneamente diretamente pela interface do Flood, é comum que nem todos os arquivos `.torrent` correspondentes sejam removidos das pastas monitoradas. Como consequência, ao reiniciar o sistema, o rTorrent tenta baixar novamente esses _torrents_, já que os arquivos `.torrent` ainda permanecem nas pastas monitoradas.
+Ao excluir vários _torrents_ simultaneamente pela interface do Flood, é comum que nem todos os arquivos `.torrent` correspondentes sejam removidos das pastas monitoradas. Como resultado, esses arquivos permanecem disponíveis para o rTorrent que, ao ser reiniciado, interpreta sua presença como novos _torrents_ a serem adicionados à sessão, iniciando novamente seus respectivos downloads.
 
-Para contornar esse problema, podemos criar um _script_ que realize verificações periódicas, comparando os _torrents_ atualmente em `seed` no rTorrent com os arquivos `.torrent` existentes nas pastas monitoradas.
+Para evitar esse comportamento, podemos criar um _script_ que execute verificações periódicas, comparando os _torrents_ atualmente presentes na sessão do rTorrent com os arquivos `.torrent` existentes nas pastas monitoradas. Caso sejam encontrados arquivos `.torrent` que não possuam uma sessão correspondente no rTorrent, eles poderão ser removidos automaticamente.
 
 Primeiro, crie o arquivo do _script_:
 
